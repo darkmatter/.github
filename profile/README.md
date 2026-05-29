@@ -4,7 +4,7 @@
   <br /><br />
   <!-- <h4><i>building software we wish existed</i></h4> -->
   <!-- <br /> -->
-  <a href="https://dm.sh">dm.sh</a> • <a href="https://nixmac.com">nixmac</a> • <a href="https://stackpanel.com">stackpanel</a>
+  { <a href="https://dm.sh">dm.sh</a> }&nbsp;  &nbsp;{ <a href="https://nixmac.com">nixmac</a> }&nbsp; &nbsp;{ <a href="https://stackpanel.com">stackpanel</a> }
   <br /><br />
 </div>
 <div align="center">
