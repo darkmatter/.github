@@ -1,6 +1,5 @@
 <div align="center">
-  <br />
-  <img src="https://github.com/user-attachments/assets/11b03a2d-47cb-41e0-91da-b1e19e7a07a4" width="320" />
+  <img src="https://github.com/user-attachments/assets/11b03a2d-47cb-41e0-91da-b1e19e7a07a4" width=280" />
   <br /><br />
   <!-- <h4><i>building software we wish existed</i></h4> -->
   <!-- <br /> -->
