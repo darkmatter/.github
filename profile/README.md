@@ -1,10 +1,11 @@
 <div align="center">
-  <br /><br />
+  <br />
   <img src="https://github.com/user-attachments/assets/11b03a2d-47cb-41e0-91da-b1e19e7a07a4" width="360" />
   <br /><br />
   <!-- <h4><i>building software we wish existed</i></h4> -->
   <!-- <br /> -->
   <a href="https://dm.sh">dm.sh</a> • <a href="https://nixmac.com">nixmac</a> • <a href="https://stackpanel.com">stackpanel</a>
+  <br /><br />
 </div>
 <div align="center">
   
