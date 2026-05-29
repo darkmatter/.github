@@ -1,14 +1,16 @@
+<div align="center">
+  <br /><br />
+  <img src="https://github.com/user-attachments/assets/11b03a2d-47cb-41e0-91da-b1e19e7a07a4" width="360" />
+  <br /><br />
+  <!-- <h4><i>building software we wish existed</i></h4> -->
+  <!-- <br /> -->
+  <a href="https://dm.sh">dm.sh</a> • <a href="https://nixmac.com">nixmac</a> • <a href="https://stackpanel.com">stackpanel</a>
+</div>
+<div align="center">
+  
+</div>
 
-```
 
-                           __              __                      __   __
-                      ____/ /____ _ _____ / /__ ____ ___   ____ _ / /_ / /_ ___   _____
-                     / __  // __ `// ___// //_// __ `__ \ / __ `// __// __// _ \ / ___/
-                    / /_/ // /_/ // /   / ,<  / / / / / // /_/ // /_ / /_ /  __// /
-                    \__,_/ \__,_//_/   /_/|_|/_/ /_/ /_/ \__,_/ \__/ \__/ \___//_/
-
-
-```
 <!--
 
 **Here are some ideas to get you started:**
