@@ -72,7 +72,7 @@ Any codebase sharing types across a language boundary MUST use Protobuf as the I
 
 Exemptions: pure libraries, services with ≤5 endpoints + single language + single first-party client, schema-as-code setups where all typed consumers are in the same language.
 
-### ADR-0004a: No reinvention
+### ADR-0004: No reinvention
 **Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0004-no-reinvention.md)
 
 Before writing an implementation, check whether it's a solved problem.
@@ -81,8 +81,8 @@ Before writing an implementation, check whether it's a solved problem.
 2. **Search before writing.** If it would exceed ~20 lines or touches a well-known domain (encoding, escaping, formatting, parsing, cryptography, date/time, protocols), assume a library exists.
 3. **A dependency is preferable to a private reimplementation.** Libraries have tests, handle edge cases, and receive upstream fixes.
 
-### ADR-0004b: Application config in one typed settings module
-**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0004-typed-settings-module-decoupled-from-provider.md)
+### ADR-0005: Application config in one typed settings module
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0005-typed-settings-module-decoupled-from-provider.md)
 
 Every binary has exactly one settings module (`src/settings.<ext>`) that:
 - Declares all configuration inputs in a typed struct/service
@@ -146,12 +146,18 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `beads-setup` | Onboard a repo onto `bd` (run when `.beads/` is missing) |
 | `beads-linear-sync` | Configure Beads ↔ Linear sync |
 | `writing-plans` | Plan before implementation |
+| `executing-plans` | Execute a written implementation plan with review checkpoints |
 | `subagent-driven-development` | Execute plans via dispatched subagents |
+| `dispatching-parallel-agents` | Delegate 2+ independent tasks to isolated subagents in parallel |
 | `finishing-a-development-branch` | Merge, PR, or cleanup after implementation |
 | `dm-skill-creator` | Create a new team-wide skill |
 | `requesting-code-review` | Dispatch code-reviewer subagent before merge |
 | `receiving-code-review` | Evaluate review feedback rigorously before implementing |
 | `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
+| `end-of-turn-review` | GPT second-opinion pass over diffs or plans at end of turn |
+| `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
+| `find-skills` | Discover and install agent skills from the open ecosystem |
+| `run-meeting-summary` | Resolve meeting artifacts and draft approved Obsidian summaries |
 
 ### UI/Frontend
 
@@ -161,6 +167,23 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `ui-ux-pro-max` | Design system intelligence (styles, palettes, fonts, UX guidelines) |
 | `vercel-react-best-practices` | React/Next.js performance |
 | `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
+| `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
+
+### Browser automation
+
+| Skill | Use for |
+|-------|--------|
+| `browser-use` | Browser automation via `browser-use` CLI with persistent sessions (Python) |
+| `agent-browser` | Chrome/Chromium via CDP — prefer for Node.js/Rust workflows |
+
+### Communication & compression
+
+| Skill | Use for |
+|-------|--------|
+| `caveman` | Ultra-compressed communication (~75% token savings) |
+| `caveman-commit` | Ultra-compressed conventional commit messages (subject ≤50 chars) |
+| `caveman-review` | Ultra-compressed code review comments (one line per finding) |
+| `compress` | Compress natural-language memory files into caveman format |
 
 ### Domain-specific
 
@@ -170,6 +193,16 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `openchronicle-setup` | Local-first agent memory (macOS) |
 | `hl-funding-analysis` | Hyperliquid perp funding rate analysis |
 
+### Runtime policies (auto-applied by agent client)
+
+These are **not task skills** — they are consumed by the agent runtime to configure session behavior.
+
+| Skill | When |
+|-------|------|
+| `using-superpowers` | Session start — establishes skill discovery and invocation protocol |
+| `continuous-learning` | Session end (Stop hook) — extracts reusable patterns into new skills |
+| `strategic-compact` | Long autonomous sessions with auto-compaction enabled |
+
 ---
 
 ## Working conventions
@@ -178,6 +211,6 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 2. **Use the standard command surface.** `./scripts/setup` before working; `./scripts/ci` before PRs.
 3. **Reference ADRs when making architectural decisions.** Surface conflicts before proceeding.
 4. **Secrets use SOPS.** Apply `sops-secret-access` skill; never print decrypted contents.
-5. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0004b.
+5. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
 6. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
-7. **One settings module per binary.** No scattered `process.env` reads (ADR-0004b).
+7. **One settings module per binary.** No scattered `process.env` reads (ADR-0005).
