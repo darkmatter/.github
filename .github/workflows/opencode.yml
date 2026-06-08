@@ -1,7 +1,11 @@
 
 name: opencode-dispatch
 
+
+
 on:
+  pull_request:
+    types: [opened,ready_for_review]
   workflow_dispatch:
     inputs:
       event_name:
@@ -41,9 +45,12 @@ on:
 
 jobs:
   opencode:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
-      contents: read
+      id-token: write
+      contents: write
+      pull-requests: write
+      issues: write
     steps:
       - name: Mint target repository token
         id: target-token
@@ -82,6 +89,10 @@ jobs:
 
       - name: Install shared OpenCode preset and skills
         run: ./.darkmatter-agents/scripts/install-opencode.sh --copy --target "${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+      - name: Add api key
+        env:
+          LITELLM_API_KEY: ${{ secrets.LITELLM_API_KEY }}
+        run: mkdir -p "$HOME/.secrets" && echo "$LITELLM_API_KEY" > "$HOME/.secrets/litellm-api-key"
 
       - name: Prepare OpenCode GitHub context
         env:
@@ -131,7 +142,7 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GITHUB_TOKEN: ${{ steps.target-token.outputs.token }}
-          MODEL: ${{ inputs.model }}
+          MODEL: "litellm/glm-5.1-fp8"
           OPENCODE_CONTEXT_DIR: ${{ runner.temp }}/opencode-context
           PROMPT: ${{ runner.temp }}/opencode-context/opencode-prompt.md
           USE_GITHUB_TOKEN: "true"
