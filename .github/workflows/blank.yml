@@ -1,0 +1,142 @@
+
+name: opencode-dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      event_name:
+        description: Original GitHub event name.
+        required: true
+        type: string
+      owner:
+        description: Source repository owner.
+        required: true
+        type: string
+      repo:
+        description: Source repository name.
+        required: true
+        type: string
+      actor:
+        description: User who triggered the command.
+        required: true
+        type: string
+      delivery:
+        description: GitHub webhook delivery ID.
+        required: true
+        type: string
+      payload:
+        description: Minimized original webhook payload JSON.
+        required: true
+        type: string
+      model:
+        description: OpenCode model.
+        required: false
+        default: openrouter/google/gemini-3.1-pro-preview-customtools
+        type: string
+      opencode_version:
+        description: OpenCode npm package version. Pinned to avoid the 1.15.1 InstanceRef regression.
+        required: false
+        default: 1.15.0
+        type: string
+
+jobs:
+  opencode:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Mint target repository token
+        id: target-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.DARKMATTER_APP_ID }}
+          private-key: ${{ secrets.DARKMATTER_APP_PRIVATE_KEY }}
+          owner: ${{ inputs.owner }}
+          repositories: ${{ inputs.repo }}
+
+      - name: Mint shared agents repository token
+        id: agents-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.DARKMATTER_APP_ID }}
+          private-key: ${{ secrets.DARKMATTER_APP_PRIVATE_KEY }}
+          owner: darkmatter
+          repositories: skills
+
+      - name: Checkout target repository
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ inputs.owner }}/${{ inputs.repo }}
+          token: ${{ steps.target-token.outputs.token }}
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Checkout shared Darkmatter agent presets
+        uses: actions/checkout@v6
+        with:
+          repository: darkmatter/skills
+          ref: main
+          path: .darkmatter-agents
+          persist-credentials: false
+          token: ${{ steps.agents-token.outputs.token }}
+
+      - name: Install shared OpenCode preset and skills
+        run: ./.darkmatter-agents/scripts/install-opencode.sh --copy --target "${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+
+      - name: Prepare OpenCode GitHub context
+        env:
+          EVENT_NAME: ${{ inputs.event_name }}
+          OWNER: ${{ inputs.owner }}
+          REPO: ${{ inputs.repo }}
+          ACTOR: ${{ inputs.actor }}
+          PAYLOAD_JSON: ${{ inputs.payload }}
+          OPENCODE_CONTEXT_DIR: ${{ runner.temp }}/opencode-context
+        run: |
+          mkdir -p "$OPENCODE_CONTEXT_DIR"
+          node <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+          const payload = JSON.parse(process.env.PAYLOAD_JSON)
+          const basePrompt = fs.readFileSync('.darkmatter-agents/.github/prompts/opencode.md', 'utf8')
+          const commentBody = payload.comment?.body || ''
+          const prompt = [
+            basePrompt.trim(),
+            '',
+            'Triggering GitHub comment/request:',
+            commentBody,
+          ].join('\n')
+          const contextDir = process.env.OPENCODE_CONTEXT_DIR
+          fs.writeFileSync(path.join(contextDir, 'opencode-event.json'), JSON.stringify({
+            eventName: process.env.EVENT_NAME,
+            actor: process.env.ACTOR,
+            repo: { owner: process.env.OWNER, repo: process.env.REPO },
+            payload,
+          }))
+          fs.writeFileSync(path.join(contextDir, 'opencode-prompt.md'), prompt)
+          NODE
+
+      - name: Remove shared agents checkout from target worktree
+        run: rm -rf .darkmatter-agents
+
+      - name: Configure target repository git auth
+        env:
+          GITHUB_TOKEN: ${{ steps.target-token.outputs.token }}
+        run: |
+          auth_header="$(python3 -c 'import base64, os; print(base64.b64encode(("x-access-token:" + os.environ["GITHUB_TOKEN"]).encode()).decode())')"
+          git config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ${auth_header}"
+          git config --global user.name "darkmatter-bot[bot]"
+          git config --global user.email "283346107+darkmatter-bot[bot]@users.noreply.github.com"
+
+      - name: Run OpenCode GitHub command
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GITHUB_TOKEN: ${{ steps.target-token.outputs.token }}
+          MODEL: ${{ inputs.model }}
+          OPENCODE_CONTEXT_DIR: ${{ runner.temp }}/opencode-context
+          PROMPT: ${{ runner.temp }}/opencode-context/opencode-prompt.md
+          USE_GITHUB_TOKEN: "true"
+          SHARE: "true"
+        run: |
+          prompt="$(cat "$PROMPT")"
+          event_json="$(cat "$OPENCODE_CONTEXT_DIR/opencode-event.json")"
+          PROMPT="$prompt" npx -y opencode-ai@${{ inputs.opencode_version }} github run --event "$event_json"
