@@ -107,6 +107,22 @@ export class Settings extends Effect.Service<Settings>()("Settings", {
 
 Secret values MUST be typed as redacted wrappers (`Config.redacted`, Pydantic `SecretStr`, Rust `secrecy::Secret<T>`). Plain string typing for a secret is a defect.
 
+### ADR-0006: README minimum standard
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md)
+
+Every non-trivial project README MUST follow [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) as the default structure and include at minimum:
+
+1. **Title and short description** (one line)
+2. **Install** — copy/paste-able command block
+3. **Usage** — copy/paste-able quickstart from fresh clone to useful result
+4. **Development command surface** — standard commands per ADR-0002
+5. **Configuration and secrets** — where env vars, local config, or secrets come from
+6. **Testing/verification** — the command a contributor runs to verify the checkout works
+7. **Contributing** — where questions go, whether PRs are accepted
+8. **License** — state the license (last section)
+
+Copy/paste-able commands must run as written from the repo root. Agents bootstrap from READMEs — missing anchors increase discovery tax on every contributor and agent.
+
 ### OTel-only observability
 **Status:** Accepted
 
@@ -125,7 +141,8 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `coding-standards` | Any TypeScript/JS/React/Node code authoring or review |
 | `brainstorming` | Before any non-trivial implementation |
 | `test-driven-development` | Before writing implementation code |
-| `systematic-debugging` | Before proposing fixes for bugs or failures |
+| `diagnose` | Before proposing fixes for hard bugs or performance regressions |
+| `systematic-debugging` | Structured approach to bugs and unexpected behavior |
 | `verification-before-completion` | Before claiming work is done |
 | `definition-of-done` | Complex, multi-step tasks |
 
@@ -138,6 +155,8 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `nix-flake-organization` | Thin `flake/` public layer + `src/` implementation |
 | `sops-secret-access` | SOPS-encrypted config, private registries |
 | `repository-organization` | Repo layout, Standard README, ADR placement, agent context |
+| `improve-codebase-architecture` | Surface architectural friction and propose deepening opportunities |
+| `zoom-out` | Get a module map when unfamiliar with an area of code |
 
 ### Task and workflow
 
@@ -158,6 +177,16 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
 | `find-skills` | Discover and install agent skills from the open ecosystem |
 | `run-meeting-summary` | Resolve meeting artifacts and draft approved Obsidian summaries |
+| `triage` | Move issues through a state machine (needs-triage → ready-for-agent/human/wontfix) |
+| `handoff` | Compact the current conversation into a handoff document for the next agent |
+
+### Design & discovery
+
+| Skill | Use for |
+|-------|--------|
+| `grill-me` | Interview you relentlessly to stress-test a plan or design |
+| `grill-with-docs` | Grilling against domain model; sharpens terminology and updates CONTEXT.md/ADRs inline |
+| `prototype` | Build a throwaway prototype (terminal app for logic, UI variations for design) |
 
 ### UI/Frontend
 
@@ -168,6 +197,9 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `vercel-react-best-practices` | React/Next.js performance |
 | `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
 | `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
+| `shadcn-registry-first` | Install registry components before hand-rolling; build 3+ variations |
+| `run-ui-registry-variations` | Build exactly three UI variations from shadcnblocks, Aceternity, or Darkmatter registry |
+| `ui-component-architecture` | Keep screens thin; reuse `@repo/ui` primitives and graduate components to shared packages |
 
 ### Browser automation
 
@@ -214,3 +246,4 @@ These are **not task skills** — they are consumed by the agent runtime to conf
 5. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
 6. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
 7. **One settings module per binary.** No scattered `process.env` reads (ADR-0005).
+8. **README follows Standard Readme.** Every non-trivial repo needs the standard anchors (ADR-0006).
