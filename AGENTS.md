@@ -17,25 +17,28 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 | [0003](https://github.com/darkmatter/skills/blob/main/docs/adr/0003-protobuf-as-service-source-of-truth.md) | Cross-language types use **Protobuf + `buf`**. Default transport: **ConnectRPC**. Generated code is committed. `buf lint` + `buf breaking` in CI. |
 | [0004](https://github.com/darkmatter/skills/blob/main/docs/adr/0004-no-reinvention.md) | **No reinvention.** Check for existing libraries before implementing. A dependency beats a private reimplementation. |
 | [0005](https://github.com/darkmatter/skills/blob/main/docs/adr/0005-typed-settings-module-decoupled-from-provider.md) | **One typed `src/settings.<ext>`** per binary. Only place that reads raw env. Validates at startup. Decoupled from provider. Secret values must use redacted wrappers (`Config.redacted`, `SecretStr`, `secrecy::Secret<T>`). |
+| [0006](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md) | Every non-trivial README follows **Standard Readme** structure. Must include: title, install, usage/quickstart, command surface (ADR-0002), config/secrets, verify command, contributing, license. All commands copy/paste-able from repo root. |
 | OTel | App code imports only **OpenTelemetry SDKs**. Provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ---
 
 ## Skills to apply proactively
 
-**Always-on:** `coding-standards`, `brainstorming`, `test-driven-development`, `systematic-debugging`, `verification-before-completion`, `definition-of-done`
+**Always-on:** `coding-standards`, `brainstorming`, `test-driven-development`, `diagnose` (hard bugs/regressions), `systematic-debugging`, `verification-before-completion`, `definition-of-done`
 
-**Task management:** `beads-setup` (when `.beads/` missing), `beads-linear-sync`, `writing-plans`, `executing-plans`
+**Task management:** `beads-setup` (when `.beads/` missing), `beads-linear-sync`, `writing-plans`, `executing-plans`, `triage` (issue workflow), `handoff` (session continuity)
 
 **Agent orchestration:** `subagent-driven-development`, `dispatching-parallel-agents`
 
 **Code quality:** `requesting-code-review`, `receiving-code-review`, `codebase-cleanup`, `repository-organization`, `end-of-turn-review`, `writing-skills`
 
-**Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`
+**Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`, `improve-codebase-architecture`, `zoom-out`
+
+**Design & discovery:** `grill-me`, `grill-with-docs`, `prototype`
 
 **Workflow:** `finishing-a-development-branch`, `dm-skill-creator`, `find-skills`, `run-meeting-summary`
 
-**UI:** `frontend-design`, `ui-ux-pro-max`, `vercel-react-best-practices`, `kickoff-dm-design`
+**UI:** `frontend-design`, `ui-ux-pro-max`, `vercel-react-best-practices`, `kickoff-dm-design`, `shadcn-registry-first`, `run-ui-registry-variations`, `ui-component-architecture`
 
 **Platform:** `nextjs-to-rwsdk-migration`, `openchronicle-setup`, `neon-postgres`
 
