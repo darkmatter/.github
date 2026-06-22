@@ -112,6 +112,34 @@ Secret values MUST be typed as redacted wrappers (`Config.redacted`, Pydantic `S
 
 App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentry/*`, PostHog, Datadog) never appear in `apps/*`. Provider wiring is isolated in shared packages.
 
+### ADR-0006: README minimum standard
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md)
+
+Every non-trivial darkmatter project README MUST follow [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) as the default structure. At minimum:
+
+1. **Title + short description** — one line, matches repo/package name
+2. **Install** — copy/paste-able command block for host tools/prerequisites
+3. **Usage** — copy/paste-able quickstart from fresh clone to useful result
+4. **Development command surface** — aligned with ADR-0002 (`install`, `setup`, `server`/`run`, `test`, `build`, `ci`, `console`)
+5. **Configuration and secrets** — where they come from, without exposing values
+6. **Testing/verification** — command to run before claiming the repo works
+7. **Contributing** — where questions go, PR acceptance, contribution requirements
+8. **License** (last section)
+
+Copy/paste-able means commands run as-written from repo root after preceding steps. Documentation-only repos may omit runnable sections only when explicitly stated.
+
+### ADR-0007: Type-checked SQL in TypeScript
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0007-type-checked-sql-in-typescript.md)
+
+TypeScript code MUST NOT embed SQL as inline strings or template literals for application queries (including tagged-template `` sql<Row>`...` ``). Use a type-checked query builder derived from the database schema.
+
+Preference order:
+1. **Kysely** — preferred for query-heavy TypeScript; strong inference across selects, joins, aliases, nullability, and result shapes
+2. **Drizzle** — allowed when already present; weaker inference for complex queries
+3. Other tools with comparable compile-time table/column/join/result checking
+
+If a query cannot be expressed through the typed surface, improve the abstraction or schema — do not fall back to inline SQL.
+
 ---
 
 ## Skills catalog
@@ -168,6 +196,9 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `vercel-react-best-practices` | React/Next.js performance |
 | `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
 | `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
+| `ui-component-architecture` | Keep React screens thin; reuse `@repo/ui` primitives; graduate reusable units to the shared package |
+| `shadcn-registry-first` | Bias UI toward existing shadcn registry components before hand-rolling; always build 3+ variations |
+| `run-ui-registry-variations` | Build exactly three UI variations from shadcnblocks, Aceternity, or the Darkmatter shadcn registry |
 
 ### Browser automation
 
@@ -214,3 +245,5 @@ These are **not task skills** — they are consumed by the agent runtime to conf
 5. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
 6. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
 7. **One settings module per binary.** No scattered `process.env` reads (ADR-0005).
+8. **READMEs follow Standard Readme structure.** Copy/paste-able commands, aligned with ADR-0002 (ADR-0006).
+9. **No inline SQL in TypeScript.** Use Kysely or Drizzle for type-checked queries (ADR-0007).

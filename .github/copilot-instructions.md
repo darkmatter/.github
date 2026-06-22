@@ -17,6 +17,8 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 | ADR-0004 | No reinvention — check for existing libraries before implementing. A dependency beats private code. |
 | ADR-0005 | One typed `src/settings.<ext>` per binary. Only place that reads raw env vars. Validates at startup. Secret values use redacted wrappers — never plain strings. |
 | OTel | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
+| ADR-0006 | READMEs MUST follow Standard Readme structure: title, install, usage/quickstart, command surface (ADR-0002), config/secrets, verification, contributing, license. All commands must be copy/paste-able from repo root. |
+| ADR-0007 | No inline SQL strings in TypeScript (including `` sql<Row>`...` ``). Use **Kysely** (preferred) or **Drizzle** for type-checked queries. No fallback to raw SQL. |
 
 ## Always apply
 
@@ -35,7 +37,7 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 
 **Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`
 
-**UI/Frontend:** `frontend-design`, `ui-ux-pro-max`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `kickoff-dm-design`
+**UI/Frontend:** `frontend-design`, `ui-ux-pro-max`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `kickoff-dm-design`, `ui-component-architecture`, `shadcn-registry-first`, `run-ui-registry-variations`
 
 **Browser automation:** `browser-use` (Python, persistent sessions), `agent-browser` (CDP, Node/Rust)
 
