@@ -18,7 +18,7 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 | ADR-0005 | One typed `src/settings.<ext>` per binary. Only place that reads raw env vars. Validates at startup. Secret values use redacted wrappers — never plain strings. |
 | ADR-0006 | READMEs follow Standard Readme: title, background if needed, TOC over 100 lines, copy-pasteable install + usage, documented command surface (ADR-0002), config/secrets docs, verification command, contributing, license last. |
 | ADR-0007 | TypeScript MUST NOT embed SQL as inline strings/template literals (incl. `sql<Row>` tags). Use a type-checked query builder — preference order Kysely > Drizzle > comparable alternatives. |
-| OTel | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
+| ADR-0008 | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ## Always apply
 

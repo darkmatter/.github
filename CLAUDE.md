@@ -117,10 +117,10 @@ Project READMEs MUST follow [Standard Readme](https://github.com/RichardLitt/sta
 
 TypeScript application code MUST NOT embed SQL as inline strings or template literals — including tagged-template helpers like `` sql<Row>`...` `` — since the compiler cannot check table/column names, joins, or nullability through them. Use a type-checked query builder or ORM instead. Preference order: **Kysely > Drizzle > other builders with comparable compile-time checking**. Narrower carve-outs exist for plain `.sql` files consumed by external DB tooling and for TypeScript migration files.
 
-### OTel-only observability
-**Status:** Accepted
+### ADR-0008: Decouple telemetry concerns
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0008-decouple-telemetry-concerns.md)
 
-App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentry/*`, PostHog, Datadog) never appear in `apps/*`. Provider wiring is isolated in shared packages.
+App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentry/*`, PostHog, Datadog) never appear in `apps/*`. Provider wiring is isolated in shared packages, exposed to apps only as OTel exporters/instrumentation plugins — swapping a provider should be a config change, not a refactor.
 
 ---
 

@@ -19,7 +19,7 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 | [0005](https://github.com/darkmatter/skills/blob/main/docs/adr/0005-typed-settings-module-decoupled-from-provider.md) | **One typed `src/settings.<ext>`** per binary. Only place that reads raw env. Validates at startup. Decoupled from provider. Secret values must use redacted wrappers (`Config.redacted`, `SecretStr`, `secrecy::Secret<T>`). |
 | [0006](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md) | READMEs follow **Standard Readme**: title, background if needed, TOC over 100 lines, copy-pasteable install + usage, documented command surface (ADR-0002), config/secrets docs, a verification command, contributing, license last. |
 | [0007](https://github.com/darkmatter/skills/blob/main/docs/adr/0007-type-checked-sql-in-typescript.md) | TypeScript MUST NOT embed SQL as inline strings/template literals (including `sql<Row>` tags). Use a **type-checked query builder**, preference order **Kysely > Drizzle > other builders with comparable compile-time checking**. |
-| OTel | App code imports only **OpenTelemetry SDKs**. Provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
+| [0008](https://github.com/darkmatter/skills/blob/main/docs/adr/0008-decouple-telemetry-concerns.md) | App code imports only **OpenTelemetry SDKs**. Provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ---
 
