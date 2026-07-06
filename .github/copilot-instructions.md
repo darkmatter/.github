@@ -16,29 +16,30 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 | ADR-0003 | Cross-language types use Protobuf + `buf`. Default transport: ConnectRPC. Commit generated code. `buf lint` + `buf breaking` in CI. |
 | ADR-0004 | No reinvention — check for existing libraries before implementing. A dependency beats private code. |
 | ADR-0005 | One typed `src/settings.<ext>` per binary. Only place that reads raw env vars. Validates at startup. Secret values use redacted wrappers — never plain strings. |
-| OTel | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
+| ADR-0006 | READMEs follow Standard Readme: title, background if needed, TOC over 100 lines, copy-pasteable install + usage, documented command surface (ADR-0002), config/secrets docs, verification command, contributing, license last. |
+| ADR-0007 | TypeScript MUST NOT embed SQL as inline strings/template literals (incl. `sql<Row>` tags). Use a type-checked query builder — preference order Kysely > Drizzle > comparable alternatives. |
+| ADR-0008 | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ## Always apply
 
-- `coding-standards` — any TypeScript/JS/React/Node code task
 - `brainstorming` — before implementing anything non-trivial
-- `test-driven-development` — before writing implementation code
-- `systematic-debugging` — before proposing fixes
-- `verification-before-completion` — before claiming work is done
+- `test-driven-development` — before writing implementation code (`tdd` is an overlapping, equally valid entry point)
 - `definition-of-done` — any complex multi-step task
+
+Note: earlier versions of this file also listed `coding-standards`, `systematic-debugging`, and `verification-before-completion` as always-apply skills. None of these exist as a skill directory in darkmatter/skills — see "Known gaps" in [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md). Don't invoke them by name until they're built.
 
 ## Key skills by category
 
-**Task management:** `beads-setup` (no `.beads/`?), `writing-plans`, `executing-plans`, `subagent-driven-development`, `dispatching-parallel-agents`, `finishing-a-development-branch`
+**Task management:** `beads-setup` (no `.beads/`?), `finishing-a-development-branch`, `handoff`
 
-**Code quality:** `requesting-code-review`, `receiving-code-review`, `codebase-cleanup`, `end-of-turn-review`, `writing-skills`
+**Code quality:** `diagnose`, `requesting-code-review`, `receiving-code-review`, `codebase-cleanup`, `end-of-turn-review`, `writing-skills`, `improve-codebase-architecture`
 
-**Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`
+**Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `choose-dev-entrypoints`
 
-**UI/Frontend:** `frontend-design`, `ui-ux-pro-max`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `kickoff-dm-design`
+**UI/Frontend:** `ui-ux-pro-max`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `ui-component-architecture`, `shadcn-registry-first`, `kickoff-dm-design` (manual), `run-ui-registry-variations` (manual)
 
-**Browser automation:** `browser-use` (Python, persistent sessions), `agent-browser` (CDP, Node/Rust)
+**Browser automation:** `agent-browser` (CDP, Node/Rust)
 
-**Communication:** `caveman`, `caveman-commit` (compact commit messages), `caveman-review` (compact reviews), `compress`
+**Communication:** `caveman-commit` (compact commit messages)
 
-**Domain:** `neon-postgres`, `openchronicle-setup`, `hl-funding-analysis`
+**Domain:** `openchronicle-setup`, `rust-best-practices`, `run-meeting-summary` (manual)
