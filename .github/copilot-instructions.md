@@ -22,24 +22,20 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 
 ## Always apply
 
-- `coding-standards` — any TypeScript/JS/React/Node code task
-- `brainstorming` — before implementing anything non-trivial
-- `test-driven-development` — before writing implementation code
 - `diagnose` — before proposing fixes
 - `definition-of-done` — any complex multi-step task
+- `tdd` — before writing implementation code
 
 ## Key skills by category
 
 **Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-gitops-conventions`, `nix-flake-organization`, `sops-secret-access`, `choose-dev-entrypoints`, `rust-best-practices`, `repository-organization`, `zoom-out`, `improve-codebase-architecture`
 
-**Code quality:** `requesting-code-review`, `receiving-code-review`, `codebase-cleanup`, `end-of-turn-review`, `writing-skills`
+**Code quality:** `codebase-cleanup`, `writing-skills`
 
-**Workflow:** `session-context-pipeline`, `finishing-a-development-branch`, `handoff`, `triage`, `grill-me`, `grill-with-docs`, `dm-skill-creator`, `find-skills`, `run-meeting-summary`
+**Workflow:** `session-context-pipeline`, `finishing-a-development-branch`, `handoff`, `grill-me`, `grill-with-docs`, `find-skills`
 
-**UI/Frontend:** `frontend-design`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `kickoff-dm-design`, `prototype`
+**UI/Frontend:** `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `prototype`, `run-ui-registry-variations`
 
-**Browser automation:** `browser-use` (Python, persistent sessions), `agent-browser` (CDP, Node/Rust)
+**Browser automation:** `agent-browser` (CDP, Node/Rust)
 
-**Communication:** `caveman`, `caveman-commit` (compact commit messages), `caveman-review` (compact reviews), `compress`
-
-**Domain:** `neon-postgres`, `openchronicle-setup`, `hl-funding-analysis`
+**Runtime policies (auto):** `using-superpowers` (session start), `strategic-compact` (long autonomous sessions)

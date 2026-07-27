@@ -120,11 +120,9 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 
 | Skill | When |
 |-------|------|
-| `coding-standards` | Any TypeScript/JS/React/Node code authoring or review |
-| `brainstorming` | Before any non-trivial implementation |
-| `test-driven-development` | Before writing implementation code |
 | `diagnose` | Before proposing fixes for bugs or failures |
 | `definition-of-done` | Complex, multi-step tasks |
+| `tdd` | Before writing implementation code (red-green-refactor slices) |
 
 ### Architecture & infrastructure
 
@@ -149,54 +147,29 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `session-context-pipeline` | Hook-driven session summarizer, library doc injection, end-of-turn checklist |
 | `finishing-a-development-branch` | Merge, PR, or cleanup after implementation |
 | `handoff` | Compact conversation into a handoff document for a fresh agent |
-| `triage` | Triage issues through category/state roles; write agent briefs for ready issues |
 | `grill-me` | Interview the user relentlessly about a plan until reaching shared understanding |
 | `grill-with-docs` | Grilling session that challenges a plan and updates CONTEXT.md and ADRs inline |
-| `dm-skill-creator` | Create a new team-wide skill |
-| `requesting-code-review` | Dispatch code-reviewer subagent before merge |
-| `receiving-code-review` | Evaluate review feedback rigorously before implementing |
 | `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
-| `end-of-turn-review` | GPT second-opinion pass over diffs or plans at end of turn |
 | `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
 | `find-skills` | Discover and install agent skills from the open ecosystem |
-| `run-meeting-summary` | Resolve meeting artifacts and draft approved Obsidian summaries |
 
 ### UI/Frontend
 
 | Skill | Use for |
 |-------|--------|
-| `frontend-design` | Distinctive, production-grade UI |
 | `ui-ux-pro-max` | Design system intelligence (styles, palettes, fonts, UX guidelines) |
 | `shadcn-registry-first` | Bias UI work toward existing shadcn registry components before hand-rolling |
 | `ui-component-architecture` | Keep React screens thin; reuse `@repo/ui` primitives, avoid div-soup |
 | `vercel-react-best-practices` | React/Next.js performance |
 | `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
-| `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
 | `prototype` | Throwaway prototype to answer a design question (terminal app or UI variations) |
+| `run-ui-registry-variations` | Build three UI variations from shadcnblocks, Aceternity, or the Darkmatter registry |
 
 ### Browser automation
 
 | Skill | Use for |
 |-------|--------|
-| `browser-use` | Browser automation via `browser-use` CLI with persistent sessions (Python) |
-| `agent-browser` | Chrome/Chromium via CDP — prefer for Node.js/Rust workflows |
-
-### Communication & compression
-
-| Skill | Use for |
-|-------|--------|
-| `caveman` | Ultra-compressed communication (~75% token savings) |
-| `caveman-commit` | Ultra-compressed conventional commit messages (subject ≤50 chars) |
-| `caveman-review` | Ultra-compressed code review comments (one line per finding) |
-| `compress` | Compress natural-language memory files into caveman format |
-
-### Domain-specific
-
-| Skill | Use for |
-|-------|--------|
-| `neon-postgres` | Neon Serverless Postgres |
-| `openchronicle-setup` | Local-first agent memory (macOS) |
-| `hl-funding-analysis` | Hyperliquid perp funding rate analysis |
+| `agent-browser` | Chrome/Chromium via CDP — browser automation for Node.js/Rust workflows |
 
 ### Runtime policies (auto-applied by agent client)
 
@@ -205,7 +178,6 @@ These are **not task skills** — they are consumed by the agent runtime to conf
 | Skill | When |
 |-------|------|
 | `using-superpowers` | Session start — establishes skill discovery and invocation protocol |
-| `continuous-learning` | Session end (Stop hook) — extracts reusable patterns into new skills |
 | `strategic-compact` | Long autonomous sessions with auto-compaction enabled |
 
 ---

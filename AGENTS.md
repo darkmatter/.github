@@ -25,23 +25,19 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 
 ## Skills to apply proactively
 
-**Always-on:** `coding-standards`, `brainstorming`, `test-driven-development`, `diagnose`, `definition-of-done`
+**Always-on:** `diagnose`, `definition-of-done`, `tdd`
 
 **Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-gitops-conventions`, `nix-flake-organization`, `sops-secret-access`, `choose-dev-entrypoints`, `rust-best-practices`, `repository-organization`, `zoom-out`, `improve-codebase-architecture`
 
-**Code quality:** `requesting-code-review`, `receiving-code-review`, `codebase-cleanup`, `end-of-turn-review`, `writing-skills`
+**Code quality:** `codebase-cleanup`, `writing-skills`
 
-**Workflow:** `session-context-pipeline`, `finishing-a-development-branch`, `handoff`, `triage`, `grill-me`, `grill-with-docs`, `dm-skill-creator`, `find-skills`, `run-meeting-summary`
+**Workflow:** `session-context-pipeline`, `finishing-a-development-branch`, `handoff`, `grill-me`, `grill-with-docs`, `find-skills`
 
-**UI:** `frontend-design`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `kickoff-dm-design`, `prototype`
+**UI:** `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `prototype`, `run-ui-registry-variations`
 
-**Platform:** `openchronicle-setup`, `neon-postgres`
+**Browser:** `agent-browser` (CDP/Node/Rust)
 
-**Browser:** `browser-use` (Python/persistent), `agent-browser` (CDP/Node/Rust)
-
-**Communication:** `caveman`, `caveman-commit`, `caveman-review`, `compress`
-
-**Runtime policies (auto):** `using-superpowers` (session start), `continuous-learning` (session end), `strategic-compact` (long autonomous sessions)
+**Runtime policies (auto):** `using-superpowers` (session start), `strategic-compact` (long autonomous sessions)
 
 ---
 
