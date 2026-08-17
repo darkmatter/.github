@@ -18,6 +18,8 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 | ADR-0006 | README minimum standard — follow [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) structure: title, install, usage, dev commands, config/secrets, testing, contributing, license last. Copy/paste-able commands. |
 | ADR-0007 | Type-checked SQL in TypeScript — no inline SQL strings or tagged templates. Use a schema-derived query builder/ORM. Prefer Kysely; Drizzle allowed when already present. |
 | ADR-0008 | Per-language reference codebases under `references/` (currently `rust/`, `go/`, `typescript/`). Skills carry prose; references carry code. Precedence: project `.agent/` → `references/` → general idiom. |
+| ADR-0009 | Curate the default skill bundle *(superseded by 0010)*. Home Manager enabled a small explicit allowlist; runtime hooks under `presets/`. Replaced by ADR-0010. |
+| ADR-0010 | Install all catalogued skills. Home Manager installs every top-level `skills/` directory — the catalog is the inventory, not an allowlist. Client runtime assets remain under `presets/<client>/runtime/`. |
 | OTel | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ## Always apply
@@ -32,9 +34,9 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 
 **Code quality:** `codebase-cleanup`, `writing-skills`
 
-**Workflow:** `session-context-pipeline`, `finishing-a-development-branch`, `handoff`, `grill-me`, `grill-with-docs`, `find-skills`
+**Workflow:** `session-context-pipeline`, `finishing-a-development-branch`, `handoff`, `grill-me`, `grill-with-docs`, `find-skills`, `triage`
 
-**UI/Frontend:** `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `prototype`, `run-ui-registry-variations`
+**UI/Frontend:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `prototype`, `run-ui-registry-variations`
 
 **Browser automation:** `agent-browser` (CDP, Node/Rust)
 

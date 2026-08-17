@@ -105,6 +105,16 @@ TypeScript code MUST NOT embed SQL as inline strings or template literals (inclu
 
 The `references/` section of `darkmatter/skills` holds per-language reference codebases (currently `rust/`, `go/`, `typescript/`) with exemplar code showing preferred conventions. Skills carry prose guidance; references carry code. Precedence when conventions conflict: project `.agent/` rules → `references/` exemplars → general language idiom.
 
+### ADR-0009: Curate the default agent skill bundle *(superseded)*
+**Status:** Superseded by ADR-0010 | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0009-curate-default-agent-skill-bundle.md)
+
+A small explicit allowlist of team-wide skills was enabled by Home Manager; client-runtime hooks lived under `presets/<client>/runtime/`. Replaced by ADR-0010, which installs every catalogued skill.
+
+### ADR-0010: Install all catalogued agent skills
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0010-install-all-catalogued-agent-skills.md)
+
+Home Manager installs **every** top-level directory in `skills/`. The module derives the enabled skill IDs from the source directory — the catalog is the human-readable inventory, not an allowlist. Adding a new skill directory includes it automatically. Client runtime assets remain under `presets/<client>/runtime/` and are not installed as task skills.
+
 ### OTel-only observability
 **Status:** Accepted
 
@@ -114,7 +124,7 @@ App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentr
 
 ## Skills catalog
 
-Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager. Full catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
+Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager, which installs every top-level `skills/` directory (ADR-0010). Full catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
 
 ### Apply on every task
 
@@ -152,11 +162,13 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
 | `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
 | `find-skills` | Discover and install agent skills from the open ecosystem |
+| `triage` | Move issues through a state machine of triage roles — create, review, or prepare for an AFK agent |
 
 ### UI/Frontend
 
 | Skill | Use for |
 |-------|--------|
+| `darkmatter-design-system` | Canonical darkmatter UI design system — tokens, theming, components; prefer over generic shadcn/ui |
 | `ui-ux-pro-max` | Design system intelligence (styles, palettes, fonts, UX guidelines) |
 | `shadcn-registry-first` | Bias UI work toward existing shadcn registry components before hand-rolling |
 | `ui-component-architecture` | Keep React screens thin; reuse `@repo/ui` primitives, avoid div-soup |
