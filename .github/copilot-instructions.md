@@ -34,10 +34,12 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 
 **Code quality:** `codebase-cleanup`, `writing-skills`
 
-**Workflow:** `session-context-pipeline`, `finishing-a-development-branch`, `handoff`, `grill-me`, `grill-with-docs`, `find-skills`, `triage`
+**Workflow:** `finishing-a-development-branch`, `handoff`, `grill-me`, `grill-with-docs`, `find-skills`, `triage`
 
 **UI/Frontend:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `prototype`, `run-ui-registry-variations`
 
 **Browser automation:** `agent-browser` (CDP, Node/Rust)
 
 **Runtime policies (auto):** `using-superpowers` (session start), `strategic-compact` (long autonomous sessions)
+
+**Client runtimes (opt-in, not task skills — ADR-0010):** `session-context-pipeline` (Claude hook: session summarizer, doc injection, end-of-turn checklist), `end-of-turn-review` (cross-client review utility)

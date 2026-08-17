@@ -154,7 +154,6 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 
 | Skill | Use for |
 |-------|--------|
-| `session-context-pipeline` | Hook-driven session summarizer, library doc injection, end-of-turn checklist |
 | `finishing-a-development-branch` | Merge, PR, or cleanup after implementation |
 | `handoff` | Compact conversation into a handoff document for a fresh agent |
 | `grill-me` | Interview the user relentlessly about a plan until reaching shared understanding |
@@ -183,14 +182,16 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 |-------|--------|
 | `agent-browser` | Chrome/Chromium via CDP — browser automation for Node.js/Rust workflows |
 
-### Runtime policies (auto-applied by agent client)
+### Runtime policies & client runtimes (not task skills)
 
-These are **not task skills** — they are consumed by the agent runtime to configure session behavior.
+These are **not task skills** (ADR-0010). Auto-applied policies configure session behavior; client runtimes are opt-in hook bundles under `presets/<client>/runtime/`.
 
-| Skill | When |
-|-------|------|
-| `using-superpowers` | Session start — establishes skill discovery and invocation protocol |
-| `strategic-compact` | Long autonomous sessions with auto-compaction enabled |
+| Item | Type | When |
+|-------|------|------|
+| `using-superpowers` | Auto policy | Session start — establishes skill discovery and invocation protocol |
+| `strategic-compact` | Auto policy | Long autonomous sessions with auto-compaction enabled |
+| `session-context-pipeline` | Opt-in runtime (Claude) | Hook-driven session summarizer, library doc injection, end-of-turn checklist |
+| `end-of-turn-review` | Opt-in runtime (cross-client) | Review utility triggered at the end of a turn |
 
 ---
 
