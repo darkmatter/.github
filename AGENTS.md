@@ -40,7 +40,7 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 
 **Code quality:** `codebase-cleanup`, `keep-codebase-maintainable`, `test-driven-development` (opt-in, when the user asks for TDD)
 
-**Workflow:** `find-skills`
+**Workflow:** `flue`, `find-skills`
 
 **UI:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `run-ui-registry-variations`
 

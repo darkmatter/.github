@@ -41,7 +41,7 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 
 **Code quality:** `codebase-cleanup`, `keep-codebase-maintainable`, `test-driven-development` (opt-in, when the user asks for TDD)
 
-**Workflow:** `find-skills`
+**Workflow:** `flue`, `find-skills`
 
 **UI/Frontend:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `run-ui-registry-variations`
 
