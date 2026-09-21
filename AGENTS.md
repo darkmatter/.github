@@ -36,11 +36,11 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 
 **Always-on:** `diagnose`, `definition-of-done`, `when-to-write-tests` (default is no new test; test observable public behavior)
 
-**Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-gitops-conventions`, `darkmatter-repo-setup`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `domain-organization`, `codebase-design`, `choose-dev-entrypoints`, `rust-best-practices`
+**Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-gitops-conventions`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `domain-organization`, `codebase-design`, `choose-dev-entrypoints`, `rust-best-practices`
 
 **Code quality:** `codebase-cleanup`, `keep-codebase-maintainable`, `test-driven-development` (opt-in, when the user asks for TDD)
 
-**Workflow:** `advisor`, `flue`, `find-skills`
+**Workflow:** `find-skills`
 
 **UI:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `run-ui-registry-variations`
 

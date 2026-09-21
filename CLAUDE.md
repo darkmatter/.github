@@ -181,7 +181,6 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `alchemy` | Alchemy v2 infrastructure (Cloudflare/AWS providers) |
 | `darkmatter-ts-toolchain` | Org TS toolchain contract: Bun, vitest/oxlint, Effect, Alchemy deploys, changesets |
 | `darkmatter-gitops-conventions` | Safe-change playbook for `darkmatter/gitops` (validation, sha-pinned images, SOPS, rollback) |
-| `darkmatter-repo-setup` | Set up or onboard a repo to darkmatter standards: toolchain, Nix devshell, ops surface, CI, AGENTS.md |
 | `nix-flake-organization` | Thin `flake/` public layer + `src/` implementation |
 | `sops-secret-access` | SOPS-encrypted config, private registries (JSON payloads, ADR-0011) |
 | `repository-organization` | Repo layout, Standard README, ADR placement, agent context |
@@ -194,7 +193,6 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 
 | Skill | Use for |
 |-------|--------|
-| `advisor` | Acting as an advisor to another agent |
 | `flue` | Working with the Flue framework |
 | `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
 | `keep-codebase-maintainable` | Cleanup and maintainability passes, not feature work |
