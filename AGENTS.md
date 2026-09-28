@@ -5,6 +5,7 @@ This file provides context for all AI agents (Claude Code, GitHub Copilot, Codex
 Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 - Skills catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md)
 - ADRs: [`docs/adr/`](https://github.com/darkmatter/skills/tree/main/docs/adr)
+- Shared instruction topics: [`docs/agents/`](https://github.com/darkmatter/skills/tree/main/docs/agents) (flake output `agentsMd`)
 
 ---
 
@@ -28,7 +29,7 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 | [0015](https://github.com/darkmatter/skills/blob/main/docs/adr/0015-cohesive-modules.md) | **Cohesive modules.** Keep each capability together; split only when it improves understanding. Canonical rules live in the `codebase-design` skill. Supersedes 0007's blanket SQL ban. |
 | [0015](https://github.com/darkmatter/skills/blob/main/docs/adr/0015-hostnames-by-audience-workers-by-path.md) | **Hostnames by audience, Workers by path.** `api.dm.sh` is the single service hostname; Workers attach plural path prefixes via zone routes. No new hostname per Worker. *(Two accepted ADRs share the number 0015 — cite by title.)* |
 | [0016](https://github.com/darkmatter/skills/blob/main/docs/adr/0016-gherkin-acceptance-for-assigned-tasks.md) | **Gherkin acceptance for assigned tasks.** Every assigned Linear task or GitHub issue carries at least one Given/When/Then scenario before implementation; trivial mechanical tasks may note an exception. |
-| OTel | App code imports only **OpenTelemetry SDKs**. Provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
+| OTel *(org convention, not a skills ADR)* | App code imports only **OpenTelemetry SDKs**. Provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ---
 
@@ -36,20 +37,20 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 
 **Always-on:** `diagnose`, `definition-of-done`, `when-to-write-tests` (default is no new test; test observable public behavior)
 
-**Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-gitops-conventions`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `domain-organization`, `codebase-design`, `choose-dev-entrypoints`, `rust-best-practices`
+**Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-repo-setup`, `darkmatter-gitops-conventions`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `domain-organization`, `codebase-design`, `choose-dev-entrypoints`, `rust-best-practices`
 
 **Code quality:** `codebase-cleanup`, `keep-codebase-maintainable`, `test-driven-development` (opt-in, when the user asks for TDD)
 
-**Workflow:** `flue`, `find-skills`
+**Workflow:** `flue`, `find-skills`, `advisor` (installed per ADR-0010; not yet listed in the catalog)
 
 **UI:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `run-ui-registry-variations`
 
 **Browser:** `agent-browser` (CDP/Node/Rust)
 
-**Client runtimes (opt-in, not task skills — ADR-0010):** `presets/claude/runtime/session-context-pipeline` (Claude hook bundle: session summarizer, doc injection, end-of-turn checklist), `presets/opencode/runtime/continuous-learning` (stop hook), `presets/opencode/runtime/strategic-compact.md` (auto-compaction contract)
+**Client runtimes (opt-in, not task skills — ADR-0010):** `presets/claude/runtime/session-context-pipeline` (Claude hook bundle: session summarizer, doc injection, end-of-turn checklist), `presets/opencode/runtime/continuous-learning` (stop hook), `presets/opencode/runtime/strategic-compact.md` (auto-compaction contract), `runtime/end-of-turn-review` (client-agnostic review utility)
 
 ---
 
 ## Per-repo agent context
 
-Every darkmatter project repo has its own `AGENTS.md` and `.agent/` directory with project-specific state and decisions. This org-level file is the floor; project-level files are the ceiling.
+Every darkmatter project repo has its own `AGENTS.md` and `.agent/` directory with project-specific state and decisions. Project `AGENTS.md` files are generated from the shared [`docs/agents/`](https://github.com/darkmatter/skills/tree/main/docs/agents) topics (`inputs.darkmatter-skills.agentsMd`) plus the repo's own `docs/AGENTS.repo.md` — see the `darkmatter-repo-setup` skill. This org-level file is the floor; project-level files are the ceiling.

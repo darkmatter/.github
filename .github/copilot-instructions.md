@@ -27,7 +27,7 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 | ADR-0015 | Cohesive modules: keep each capability together; split only when it improves understanding. Canonical rules live in the `codebase-design` skill. |
 | ADR-0015 | Hostnames by audience, Workers by path: `api.dm.sh` is the single service hostname; Workers attach plural path prefixes via zone routes. *(Two accepted ADRs share 0015 — cite by title.)* |
 | ADR-0016 | Gherkin acceptance: assigned Linear tasks and GitHub issues carry at least one Given/When/Then scenario before implementation; trivial mechanical tasks may note an exception. |
-| OTel | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
+| OTel *(org convention, not a skills ADR)* | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ## Always apply
 
@@ -37,14 +37,14 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 
 ## Key skills by category
 
-**Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-gitops-conventions`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `domain-organization`, `codebase-design`, `choose-dev-entrypoints`, `rust-best-practices`
+**Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-repo-setup`, `darkmatter-gitops-conventions`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `domain-organization`, `codebase-design`, `choose-dev-entrypoints`, `rust-best-practices`
 
 **Code quality:** `codebase-cleanup`, `keep-codebase-maintainable`, `test-driven-development` (opt-in, when the user asks for TDD)
 
-**Workflow:** `flue`, `find-skills`
+**Workflow:** `flue`, `find-skills`, `advisor` (installed per ADR-0010; not yet listed in the catalog)
 
 **UI/Frontend:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `run-ui-registry-variations`
 
 **Browser automation:** `agent-browser` (CDP, Node/Rust)
 
-**Client runtimes (opt-in, not task skills — ADR-0010):** `presets/claude/runtime/session-context-pipeline` (Claude hook bundle: session summarizer, doc injection, end-of-turn checklist), `presets/opencode/runtime/continuous-learning` (stop hook), `presets/opencode/runtime/strategic-compact.md` (auto-compaction contract)
+**Client runtimes (opt-in, not task skills — ADR-0010):** `presets/claude/runtime/session-context-pipeline` (Claude hook bundle: session summarizer, doc injection, end-of-turn checklist), `presets/opencode/runtime/continuous-learning` (stop hook), `presets/opencode/runtime/strategic-compact.md` (auto-compaction contract), `runtime/end-of-turn-review` (client-agnostic review utility)

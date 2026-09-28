@@ -154,8 +154,8 @@ Cloudflare Workers get hostnames by audience, not per feature: `dm.sh` / `darkma
 
 Every Linear task or GitHub issue assigned to a person or agent MUST include at least one Gherkin acceptance scenario (Given/When/Then with concrete inputs and observable outcomes) before implementation begins. A trivial, mechanical task may omit the scenario by stating the expected result and noting the exception; behavior changes always require one. Complete the task when acceptance conditions are verified and the evidence recorded.
 
-### OTel-only observability
-**Status:** Accepted
+### OTel-only observability *(org convention, not a skills ADR)*
+**Status:** Org convention — no ADR in [darkmatter/skills/docs/adr](https://github.com/darkmatter/skills/tree/main/docs/adr) records it
 
 App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentry/*`, PostHog, Datadog) never appear in `apps/*`. Provider wiring is isolated in shared packages.
 
@@ -177,9 +177,10 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 
 | Skill | Use for |
 |-------|--------|
-| `effect-typescript` | Effect services, Layers, typed errors, Schema, Alchemy deploys |
-| `alchemy` | Alchemy v2 infrastructure (Cloudflare/AWS providers) |
-| `darkmatter-ts-toolchain` | Org TS toolchain contract: Bun, vitest/oxlint, Effect, Alchemy deploys, changesets |
+| `effect-typescript` | Effect services, Layers, typed errors, Schema, effect-orpc typed RPC, Postgres adapters, named config files via `Config` (ADR-0014) |
+| `alchemy` | Alchemy v2 infrastructure and deploys (Cloudflare/AWS providers), Postgres-first app data |
+| `darkmatter-ts-toolchain` | Org TS preferred stack and CI contract: Bun catalogs, Effect 4, effect-orpc, Postgres-first data, tsgo, oxlint/oxfmt, Vitest, Alchemy, UI defaults |
+| `darkmatter-repo-setup` | Repo setup and compliance checks against the template/toolchain standard (Bun catalogs, Effect 4, effect-agent, effect-orpc, Postgres-first data, React 19/shadcn UI); generated `AGENTS.md` from the shared `docs/agents/` topics |
 | `darkmatter-gitops-conventions` | Safe-change playbook for `darkmatter/gitops` (validation, sha-pinned images, SOPS, rollback) |
 | `nix-flake-organization` | Thin `flake/` public layer + `src/` implementation |
 | `sops-secret-access` | SOPS-encrypted config, private registries (JSON payloads, ADR-0011) |
@@ -194,6 +195,7 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | Skill | Use for |
 |-------|--------|
 | `flue` | Working with the Flue framework |
+| `advisor` | Acting as an advisor to another agent (installed per ADR-0010; not yet listed in `docs/catalog.md`) |
 | `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
 | `keep-codebase-maintainable` | Cleanup and maintainability passes, not feature work |
 | `test-driven-development` | Opt-in red-green-refactor when the user asks for TDD; ordinary test requests use `when-to-write-tests` |
@@ -218,13 +220,14 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 
 ### Client runtimes (not task skills)
 
-These are **not task skills** (ADR-0010). They are opt-in hook bundles under `presets/<client>/runtime/`:
+These are **not task skills** (ADR-0010). They are opt-in hook bundles under `presets/<client>/runtime/`, plus one client-agnostic utility under `runtime/`:
 
 | Item | Client | What |
 |-------|--------|------|
 | `session-context-pipeline` | Claude | Opt-in hook bundle: session summarizer, library doc injection, end-of-turn checklist |
 | `continuous-learning` | OpenCode | Opt-in continuous-learning stop hook |
 | `strategic-compact` | OpenCode | Auto-compaction contract implemented by the OpenCode plugin |
+| `end-of-turn-review` | Any | Opt-in client-agnostic review utility (`runtime/end-of-turn-review/`) |
 
 ---
 
