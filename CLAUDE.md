@@ -16,23 +16,6 @@ Darkmatter is a small, polyglot engineering team shipping developer tools, crypt
 
 These decisions apply to **every** darkmatter project repo unless the project explicitly documents an exception. Full ADR text lives in [darkmatter/skills/docs/adr](https://github.com/darkmatter/skills/tree/main/docs/adr).
 
-### ADR-0001: Beads is the standard task tracker and agent memory store
-**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0001-beads-as-task-tracker-and-agent-memory.md)
-
-Use `bd` (beads) for all task tracking and persistent agent memory. **Do not** use `TodoWrite`, `TaskCreate`, `MEMORY.md`, `TODO.md`, or `NOTES.md` for state that must survive a session.
-
-| Command | Purpose |
-|---------|--------|
-| `bd prime` | Load task + memory context at session start |
-| `bd create "task"` | Create a task |
-| `bd ready` | List tasks with all blockers closed |
-| `bd remember "insight"` | Store a memory |
-| `bd memories <keyword>` | Query stored memories |
-| `bd close <id>` | Close a task |
-| `bd linear sync` | Sync bidirectionally with Linear |
-
-When a repo lacks `.beads/`, apply the `beads-setup` skill before creating tasks.
-
 ### ADR-0002: Standard command surface
 **Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0002-standard-project-command-surface.md)
 
@@ -107,8 +90,72 @@ export class Settings extends Effect.Service<Settings>()("Settings", {
 
 Secret values MUST be typed as redacted wrappers (`Config.redacted`, Pydantic `SecretStr`, Rust `secrecy::Secret<T>`). Plain string typing for a secret is a defect.
 
-### OTel-only observability
-**Status:** Accepted
+ADR-0014 makes named config files the primary source: an interactive run picks a named config from a list, and flags/env vars only override individual keys.
+
+### ADR-0006: README minimum standard
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md)
+
+Every darkmatter project README follows [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) as the default structure. Required sections: title + short description, install (copy/paste-able), usage (copy/paste-able quickstart), development command surface (aligns with ADR-0002), configuration/secrets, testing/verification, contributing, and license last. Copy/paste-able means commands run as written from the repo root.
+
+### ADR-0007: Type-checked SQL in TypeScript *(superseded)*
+**Status:** Superseded by ADR-0015 (cohesive modules) | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0007-type-checked-sql-in-typescript.md)
+
+Originally banned inline SQL in favor of schema-derived query builders (**Kysely** preferred, **Drizzle** allowed). ADR-0015 supersedes the blanket ban: existing typed builders and ORMs may stay in place, and parameterized SQL may live inside its owning adapter alongside bindings and row conversion, with returned rows validated and observable query behavior verified against the database.
+
+### ADR-0008: Per-language reference codebases
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0008-per-language-reference-codebases.md)
+
+Per-language reference codebases (under `references/` in `darkmatter/skills`) hold exemplar code showing preferred conventions. Skills carry prose guidance; references carry code. Precedence when conventions conflict: project `.agent/` rules → `references/` exemplars → general language idiom.
+
+### ADR-0009: Curate the default agent skill bundle *(superseded)*
+**Status:** Superseded by ADR-0010 | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0009-curate-default-agent-skill-bundle.md)
+
+A small explicit allowlist of team-wide skills was enabled by Home Manager; client-runtime hooks lived under `presets/<client>/runtime/`. Replaced by ADR-0010, which installs every catalogued skill.
+
+### ADR-0010: Install all catalogued agent skills
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0010-install-all-catalogued-agent-skills.md)
+
+Home Manager installs **every** top-level directory in `skills/`. The module derives the enabled skill IDs from the source directory — the catalog is the human-readable inventory, not an allowlist. Adding a new skill directory includes it automatically. Client runtime assets remain under `presets/<client>/runtime/` and are not installed as task skills.
+
+### ADR-0011: SOPS-encrypted files are stored as JSON
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0011-sops-files-as-json.md)
+
+SOPS-encrypted secret documents MUST be JSON, named `*.sops.json`. No new `*.sops.yaml`, `.env.sops`, or other non-JSON payloads; convert existing ones when touched. The SOPS creation-rules file (`.sops.yaml`) is SOPS configuration, not an encrypted document, and stays as-is. JSON payloads import directly into TypeScript and Nix (`lib.importJSON`) and stay inspectable with `jq` without decrypting.
+
+### ADR-0012: TypeScript-only projects write ops scripts in TypeScript
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0012-ops-scripts-in-typescript.md)
+
+In a TypeScript-only project, utility and operations scripts (`scripts/`, codegen, migrate/seed, release, doctor, git hooks, CI steps beyond invoking one command) MUST be TypeScript, run with Bun (`bun scripts/ci.ts`). Allowed dispatchers: `just` recipes, package/Turbo scripts, and CI YAML that only exec the TS entrypoint. Narrow POSIX exception: a trampoline that only bootstraps the runtime or `exec`s into `nix develop`. No new `.sh` files; convert when touched.
+
+### ADR-0013: Shared UI lives in its own package; the name is per-repo
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0013-shared-ui-is-its-own-package.md)
+
+Reusable React UI MUST live in its own package, separate from app screens, routes, and business logic. The package path and import alias are per-repo — discover them from the workspace; do not require `@repo/ui` or any other name. Graduate a visual unit into the package on second use or when it is a presentational primitive; keep components dumb (no routes, stores, or API clients inside).
+
+### ADR-0014: Named config files over flags and env
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0014-named-config-files-over-flags-and-env.md)
+
+Configuration comes from named, committed, complete configuration files. There is no selector flag: an interactive run picks a named config from a list; a non-interactive run takes the name from the environment. Flags and environment variables override individual keys — they are not the primary source. Everything is read through `effect/Config` (the ADR-0005 settings module), so the source stays interchangeable. Scope is configuration, not invocation arguments.
+
+### ADR-0015: Cohesive modules and small public interfaces
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0015-cohesive-modules.md)
+
+Keep each capability together, make it simple to use, and split it only when the split improves understanding. The rules in the `codebase-design` skill are the canonical module convention. Group source by domain, then by useful role; keep an operation's helpers, queries, bindings, and decoding nearby. Public interfaces expose complete operations including ordering, failure, and cleanup. Retain thin public package entries and real external-interface adapters; remove internal forwarding chains that add no contract. When introducing a file limit, use 300 nonblank, noncomment lines. Supersedes ADR-0007's blanket SQL ban; ADR-0013's UI package boundary remains in force.
+
+### ADR-0015: Hostnames by audience, Workers by path
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0015-hostnames-by-audience-workers-by-path.md)
+
+Cloudflare Workers get hostnames by audience, not per feature: `dm.sh` / `darkmatter.io` serve the marketing site; `api.dm.sh` is the single hostname for service Workers, each addressed by a plural path prefix via a zone route. `dm.sh/api/*` is reserved for same-origin proxies. No new hostname per Worker without an ADR-level reason. Only the production Alchemy stage attaches DNS records and routes.
+
+*(Note: two accepted ADRs share the number 0015 — cite and index by title, not number.)*
+
+### ADR-0016: Assigned tasks include Gherkin acceptance scenarios
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0016-gherkin-acceptance-for-assigned-tasks.md)
+
+Every Linear task or GitHub issue assigned to a person or agent MUST include at least one Gherkin acceptance scenario (Given/When/Then with concrete inputs and observable outcomes) before implementation begins. A trivial, mechanical task may omit the scenario by stating the expected result and noting the exception; behavior changes always require one. Complete the task when acceptance conditions are verified and the evidence recorded.
+
+### OTel-only observability *(org convention, not a skills ADR)*
+**Status:** Org convention — no ADR in [darkmatter/skills/docs/adr](https://github.com/darkmatter/skills/tree/main/docs/adr) records it
 
 App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentry/*`, PostHog, Datadog) never appear in `apps/*`. Provider wiring is isolated in shared packages.
 
@@ -116,101 +163,84 @@ App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentr
 
 ## Skills catalog
 
-Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager. Full catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
+Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager, which installs every top-level `skills/` directory (ADR-0010). Full catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
 
 ### Apply on every task
 
 | Skill | When |
 |-------|------|
-| `coding-standards` | Any TypeScript/JS/React/Node code authoring or review |
-| `brainstorming` | Before any non-trivial implementation |
-| `test-driven-development` | Before writing implementation code |
-| `systematic-debugging` | Before proposing fixes for bugs or failures |
-| `verification-before-completion` | Before claiming work is done |
+| `diagnose` | Before proposing fixes for bugs or failures |
 | `definition-of-done` | Complex, multi-step tasks |
+| `when-to-write-tests` | Before writing or requesting tests — default is no new test; test observable public behavior |
 
 ### Architecture & infrastructure
 
 | Skill | Use for |
 |-------|--------|
-| `effect-typescript` | Effect services, Layers, typed errors, Schema, Alchemy deploys |
-| `alchemy` | Alchemy v2 infrastructure (Cloudflare/AWS providers) |
+| `effect-typescript` | Effect services, Layers, typed errors, Schema, effect-orpc typed RPC, Postgres adapters, named config files via `Config` (ADR-0014) |
+| `alchemy` | Alchemy v2 infrastructure and deploys (Cloudflare/AWS providers), Postgres-first app data |
+| `darkmatter-ts-toolchain` | Org TS preferred stack and CI contract: Bun catalogs, Effect 4, effect-orpc, Postgres-first data, tsgo, oxlint/oxfmt, Vitest, Alchemy, UI defaults |
+| `darkmatter-repo-setup` | Repo setup and compliance checks against the template/toolchain standard (Bun catalogs, Effect 4, effect-agent, effect-orpc, Postgres-first data, React 19/shadcn UI); generated `AGENTS.md` from the shared `docs/agents/` topics |
+| `darkmatter-gitops-conventions` | Safe-change playbook for `darkmatter/gitops` (validation, sha-pinned images, SOPS, rollback) |
 | `nix-flake-organization` | Thin `flake/` public layer + `src/` implementation |
-| `sops-secret-access` | SOPS-encrypted config, private registries |
+| `sops-secret-access` | SOPS-encrypted config, private registries (JSON payloads, ADR-0011) |
 | `repository-organization` | Repo layout, Standard README, ADR placement, agent context |
+| `domain-organization` | Organize source by domain owner, role, and module; plan structural moves |
+| `codebase-design` | Module boundaries and cohesive capabilities — canonical conventions (ADR-0015) |
+| `choose-dev-entrypoints` | Choose responsibility boundaries across Nix, Just, Bun, Turborepo, scripts |
+| `rust-best-practices` | Idiomatic Rust: borrowing, error handling, linting, performance, testing |
 
 ### Task and workflow
 
 | Skill | Use for |
 |-------|--------|
-| `beads-setup` | Onboard a repo onto `bd` (run when `.beads/` is missing) |
-| `beads-linear-sync` | Configure Beads ↔ Linear sync |
-| `writing-plans` | Plan before implementation |
-| `executing-plans` | Execute a written implementation plan with review checkpoints |
-| `subagent-driven-development` | Execute plans via dispatched subagents |
-| `dispatching-parallel-agents` | Delegate 2+ independent tasks to isolated subagents in parallel |
-| `finishing-a-development-branch` | Merge, PR, or cleanup after implementation |
-| `dm-skill-creator` | Create a new team-wide skill |
-| `requesting-code-review` | Dispatch code-reviewer subagent before merge |
-| `receiving-code-review` | Evaluate review feedback rigorously before implementing |
+| `flue` | Working with the Flue framework |
+| `advisor` | Acting as an advisor to another agent (installed per ADR-0010; not yet listed in `docs/catalog.md`) |
 | `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
-| `end-of-turn-review` | GPT second-opinion pass over diffs or plans at end of turn |
-| `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
+| `keep-codebase-maintainable` | Cleanup and maintainability passes, not feature work |
+| `test-driven-development` | Opt-in red-green-refactor when the user asks for TDD; ordinary test requests use `when-to-write-tests` |
 | `find-skills` | Discover and install agent skills from the open ecosystem |
-| `run-meeting-summary` | Resolve meeting artifacts and draft approved Obsidian summaries |
 
 ### UI/Frontend
 
 | Skill | Use for |
 |-------|--------|
-| `frontend-design` | Distinctive, production-grade UI |
+| `darkmatter-design-system` | Canonical darkmatter UI design system — tokens, theming, components; prefer over generic shadcn/ui |
 | `ui-ux-pro-max` | Design system intelligence (styles, palettes, fonts, UX guidelines) |
+| `shadcn-registry-first` | Bias UI work toward existing shadcn registry components before hand-rolling |
+| `ui-component-architecture` | Keep reusable React UI in its own per-repo package (ADR-0013); screens stay thin |
 | `vercel-react-best-practices` | React/Next.js performance |
-| `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
-| `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
+| `run-ui-registry-variations` | Build three UI variations from shadcnblocks, Aceternity, or the Darkmatter registry (manual invocation) |
 
 ### Browser automation
 
 | Skill | Use for |
 |-------|--------|
-| `browser-use` | Browser automation via `browser-use` CLI with persistent sessions (Python) |
-| `agent-browser` | Chrome/Chromium via CDP — prefer for Node.js/Rust workflows |
+| `agent-browser` | Chrome/Chromium via CDP — browser automation for Node.js/Rust workflows |
 
-### Communication & compression
+### Client runtimes (not task skills)
 
-| Skill | Use for |
-|-------|--------|
-| `caveman` | Ultra-compressed communication (~75% token savings) |
-| `caveman-commit` | Ultra-compressed conventional commit messages (subject ≤50 chars) |
-| `caveman-review` | Ultra-compressed code review comments (one line per finding) |
-| `compress` | Compress natural-language memory files into caveman format |
+These are **not task skills** (ADR-0010). They are opt-in hook bundles under `presets/<client>/runtime/`, plus one client-agnostic utility under `runtime/`:
 
-### Domain-specific
-
-| Skill | Use for |
-|-------|--------|
-| `neon-postgres` | Neon Serverless Postgres |
-| `openchronicle-setup` | Local-first agent memory (macOS) |
-| `hl-funding-analysis` | Hyperliquid perp funding rate analysis |
-
-### Runtime policies (auto-applied by agent client)
-
-These are **not task skills** — they are consumed by the agent runtime to configure session behavior.
-
-| Skill | When |
-|-------|------|
-| `using-superpowers` | Session start — establishes skill discovery and invocation protocol |
-| `continuous-learning` | Session end (Stop hook) — extracts reusable patterns into new skills |
-| `strategic-compact` | Long autonomous sessions with auto-compaction enabled |
+| Item | Client | What |
+|-------|--------|------|
+| `session-context-pipeline` | Claude | Opt-in hook bundle: session summarizer, library doc injection, end-of-turn checklist |
+| `continuous-learning` | OpenCode | Opt-in continuous-learning stop hook |
+| `strategic-compact` | OpenCode | Auto-compaction contract implemented by the OpenCode plugin |
+| `end-of-turn-review` | Any | Opt-in client-agnostic review utility (`runtime/end-of-turn-review/`) |
 
 ---
 
 ## Working conventions
 
-1. **Check for Beads first.** No `.beads/`? Apply `beads-setup` before creating tasks.
-2. **Use the standard command surface.** `./scripts/setup` before working; `./scripts/ci` before PRs.
-3. **Reference ADRs when making architectural decisions.** Surface conflicts before proceeding.
-4. **Secrets use SOPS.** Apply `sops-secret-access` skill; never print decrypted contents.
-5. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
-6. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
-7. **One settings module per binary.** No scattered `process.env` reads (ADR-0005).
+1. **Use the standard command surface.** `./scripts/setup` before working; `./scripts/ci` before PRs. In TypeScript-only repos the scripts themselves are TypeScript, run with Bun (ADR-0012).
+2. **Reference ADRs when making architectural decisions.** Surface conflicts before proceeding.
+3. **Secrets use SOPS.** Apply `sops-secret-access` skill; never print decrypted contents. Encrypted documents are JSON, named `*.sops.json` (ADR-0011).
+4. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
+5. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
+6. **One settings module per binary.** No scattered `process.env` reads (ADR-0005). Configuration comes from named config files; flags and env vars only override individual keys (ADR-0014).
+7. **Cohesive modules.** Keep each capability together; parameterized SQL may live in its owning adapter with row validation (ADR-0015, which supersedes ADR-0007's blanket SQL ban).
+8. **READMEs meet the minimum standard.** Follow Standard Readme structure with required onboarding anchors (ADR-0006).
+9. **Shared UI is its own package.** The package name is per-repo; screens import primitives from it (ADR-0013).
+10. **One service hostname.** Service Workers attach to `api.dm.sh` by plural path prefix; no new hostname per Worker (ADR-0015).
+11. **Assigned tasks carry Gherkin acceptance scenarios** before implementation begins (ADR-0016).
