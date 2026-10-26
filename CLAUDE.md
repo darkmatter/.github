@@ -200,7 +200,7 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `keep-codebase-maintainable` | Cleanup and maintainability passes, not feature work |
 | `test-driven-development` | Opt-in red-green-refactor when the user asks for TDD; ordinary test requests use `when-to-write-tests` |
 | `find-skills` | Discover and install agent skills from the open ecosystem |
-
+| `record-rule` | Manually invoked: interview for intent and applicability, reconcile a rule note with org-wide/project-local policies, land on `main`, activate, verify in every configured agent |
 ### UI/Frontend
 
 | Skill | Use for |

@@ -41,7 +41,7 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 
 **Code quality:** `codebase-cleanup`, `keep-codebase-maintainable`, `test-driven-development` (opt-in, when the user asks for TDD)
 
-**Workflow:** `flue`, `find-skills`, `advisor` (installed per ADR-0010; not yet listed in the catalog)
+**Workflow:** `flue`, `find-skills`, `record-rule` (manual invocation: interview, reconcile a rule note, land on `main`, activate, verify in every configured agent), `advisor` (installed per ADR-0010; not yet listed in the catalog)
 
 **UI:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `run-ui-registry-variations`
 
