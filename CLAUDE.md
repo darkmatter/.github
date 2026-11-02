@@ -140,7 +140,7 @@ Configuration comes from named, committed, complete configuration files. There i
 ### ADR-0015: Cohesive modules and small public interfaces
 **Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0015-cohesive-modules.md)
 
-Keep each capability together, make it simple to use, and split it only when the split improves understanding. The rules in the `codebase-design` skill are the canonical module convention. Group source by domain, then by useful role; keep an operation's helpers, queries, bindings, and decoding nearby. Public interfaces expose complete operations including ordering, failure, and cleanup. Retain thin public package entries and real external-interface adapters; remove internal forwarding chains that add no contract. When introducing a file limit, use 300 nonblank, noncomment lines. Supersedes ADR-0007's blanket SQL ban; ADR-0013's UI package boundary remains in force.
+Keep each capability together, make it simple to use, and split it only when the split improves understanding. The **Readability and module design** section in [docs/agents/60-readability.md](https://github.com/darkmatter/skills/blob/main/docs/agents/60-readability.md) is the canonical module convention (ownership moved out of the retired `codebase-design` skill by ADR-0017). Group source by domain, then by useful role; keep an operation's helpers, queries, bindings, and decoding nearby. Public interfaces expose complete operations including ordering, failure, and cleanup. Retain thin public package entries and real external-interface adapters; remove internal forwarding chains that add no contract. When introducing a file limit, use 300 nonblank, noncomment lines. Supersedes ADR-0007's blanket SQL ban; ADR-0013's UI package boundary remains in force.
 
 ### ADR-0015: Hostnames by audience, Workers by path
 **Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0015-hostnames-by-audience-workers-by-path.md)
@@ -154,6 +154,16 @@ Cloudflare Workers get hostnames by audience, not per feature: `dm.sh` / `darkma
 
 Every Linear task or GitHub issue assigned to a person or agent MUST include at least one Gherkin acceptance scenario (Given/When/Then with concrete inputs and observable outcomes) before implementation begins. A trivial, mechanical task may omit the scenario by stating the expected result and noting the exception; behavior changes always require one. Complete the task when acceptance conditions are verified and the evidence recorded.
 
+### ADR-0017: Skill and instruction ownership
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0017-skill-and-instruction-ownership.md)
+
+Each policy domain has exactly one owner; every other artifact references the owner by name instead of restating the policy. The **Readability and module design** section in `docs/agents/60-readability.md` is the canonical source for module and source-layout rules. `repository-organization` owns placement/README/ADR process; `darkmatter-ts-toolchain` owns the TS stack and check contract; `when-to-write-tests` owns test necessity (TDD is explicit opt-in); `choose-dev-entrypoints` owns entrypoints; `alchemy` owns deploy implementation; `sops-secret-access` owns secret access. Do not recreate a deleted skill to hold a rule — move the rule to its owner and update active references. Partially supersedes ADR-0015's ownership/pointer decision only; its technical decisions stand.
+
+### ADR-0018: Centaur consumes the root skills catalog
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0018-centaur-consumes-skills-directly.md)
+
+`skills/` at the repository root of `darkmatter/skills` is the canonical skill source and Centaur consumes it directly. There is no sandbox manifest, generated subtree, sync script, or drift check; do not reintroduce `.agents/skills/` — `.agents/` is ignored local state, never a distribution artifact. Catalog validation covers skill structure, catalog parity, links, and generated instructions.
+
 ### OTel-only observability *(org convention, not a skills ADR)*
 **Status:** Org convention — no ADR in [darkmatter/skills/docs/adr](https://github.com/darkmatter/skills/tree/main/docs/adr) records it
 
@@ -163,14 +173,13 @@ App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentr
 
 ## Skills catalog
 
-Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager, which installs every top-level `skills/` directory (ADR-0010). Full catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
+Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager, which installs every top-level `skills/` directory (ADR-0010). The catalog is the human-readable inventory, not an allowlist; each local skill owns the policy named in its row (ADR-0017). Full catalog with ownership columns: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
 
 ### Apply on every task
 
 | Skill | When |
 |-------|------|
-| `diagnose` | Before proposing fixes for bugs or failures |
-| `definition-of-done` | Complex, multi-step tasks |
+| `definition-of-done` | Complex, multi-step tasks — completion conditions and expected evidence |
 | `when-to-write-tests` | Before writing or requesting tests — default is no new test; test observable public behavior |
 
 ### Architecture & infrastructure
@@ -181,53 +190,47 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `alchemy` | Alchemy v2 infrastructure and deploys (Cloudflare/AWS providers), Postgres-first app data |
 | `darkmatter-ts-toolchain` | Org TS preferred stack and CI contract: Bun catalogs, Effect 4, effect-orpc, Postgres-first data, tsgo, oxlint/oxfmt, Vitest, Alchemy, UI defaults |
 | `darkmatter-repo-setup` | Repo setup and compliance checks against the template/toolchain standard (Bun catalogs, Effect 4, effect-agent, effect-orpc, Postgres-first data, React 19/shadcn UI); generated `AGENTS.md` from the shared `docs/agents/` topics |
-| `darkmatter-gitops-conventions` | Safe-change playbook for `darkmatter/gitops` (validation, sha-pinned images, SOPS, rollback) |
-| `nix-flake-organization` | Thin `flake/` public layer + `src/` implementation |
-| `sops-secret-access` | SOPS-encrypted config, private registries (JSON payloads, ADR-0011) |
-| `repository-organization` | Repo layout, Standard README, ADR placement, agent context |
-| `domain-organization` | Organize source by domain owner, role, and module; plan structural moves |
-| `codebase-design` | Module boundaries and cohesive capabilities — canonical conventions (ADR-0015) |
-| `choose-dev-entrypoints` | Choose responsibility boundaries across Nix, Just, Bun, Turborepo, scripts |
-| `rust-best-practices` | Idiomatic Rust: borrowing, error handling, linting, performance, testing |
+| `choose-dev-entrypoints` | Entrypoint layering across Nix, Just, Bun, Turborepo, package scripts, `scripts/`, including ops-script language |
 
 ### Task and workflow
 
 | Skill | Use for |
 |-------|--------|
-| `flue` | Working with the Flue framework |
-| `advisor` | Acting as an advisor to another agent (installed per ADR-0010; not yet listed in `docs/catalog.md`) |
-| `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
-| `keep-codebase-maintainable` | Cleanup and maintainability passes, not feature work |
-| `test-driven-development` | Opt-in red-green-refactor when the user asks for TDD; ordinary test requests use `when-to-write-tests` |
-| `find-skills` | Discover and install agent skills from the open ecosystem |
+| `advisor` | Acting as an advisor to another agent: prevent reinvention, log observed agent events |
+| `codebase-cleanup` | Scoped cleanup and the optional eight-pass quality audit; feature work and bug fixes stay out |
 | `record-rule` | Manually invoked: interview for intent and applicability, reconcile a rule note with org-wide/project-local policies, land on `main`, activate, verify in every configured agent |
+
+### Externally installed skills
+
+Declared in the root `package.json` `skills` array; maintained upstream, not vendored in `skills/` and not part of repo-owned policy:
+
+| Skill | Source |
+|-------|--------|
+| `agent-browser` | `vercel-labs/agent-browser` |
+| `find-skills` | `vercel-labs/skills` |
+| `rust-best-practices` | `apollographql/skills` |
+| `test-driven-development` | `obra/superpowers` — opt-in when the user asks for TDD; ordinary test requests use `when-to-write-tests` |
+| `ui-ux-pro-max` | `nextlevelbuilder/ui-ux-pro-max-skill` |
+| `vercel-react-best-practices` | `vercel-labs/agent-skills` |
+
 ### UI/Frontend
 
 | Skill | Use for |
 |-------|--------|
-| `darkmatter-design-system` | Canonical darkmatter UI design system — tokens, theming, components; prefer over generic shadcn/ui |
-| `ui-ux-pro-max` | Design system intelligence (styles, palettes, fonts, UX guidelines) |
-| `shadcn-registry-first` | Bias UI work toward existing shadcn registry components before hand-rolling |
+| `darkmatter-design-system` | Darkmatter visual language and tokens when a project has no established design system |
+| `shadcn-registry-first` | Registry-first component sourcing, installation, and comparison |
 | `ui-component-architecture` | Keep reusable React UI in its own per-repo package (ADR-0013); screens stay thin |
-| `vercel-react-best-practices` | React/Next.js performance |
-| `run-ui-registry-variations` | Build three UI variations from shadcnblocks, Aceternity, or the Darkmatter registry (manual invocation) |
-
-### Browser automation
-
-| Skill | Use for |
-|-------|--------|
-| `agent-browser` | Chrome/Chromium via CDP — browser automation for Node.js/Rust workflows |
+| `run-ui-registry-variations` | Build and compare three registry-derived UI variations (manual invocation only) |
 
 ### Client runtimes (not task skills)
 
-These are **not task skills** (ADR-0010). They are opt-in hook bundles under `presets/<client>/runtime/`, plus one client-agnostic utility under `runtime/`:
+These are **not task skills** (ADR-0010). They are opt-in hook bundles under `presets/<client>/runtime/`:
 
 | Item | Client | What |
 |-------|--------|------|
 | `session-context-pipeline` | Claude | Opt-in hook bundle: session summarizer, library doc injection, end-of-turn checklist |
 | `continuous-learning` | OpenCode | Opt-in continuous-learning stop hook |
 | `strategic-compact` | OpenCode | Auto-compaction contract implemented by the OpenCode plugin |
-| `end-of-turn-review` | Any | Opt-in client-agnostic review utility (`runtime/end-of-turn-review/`) |
 
 ---
 
@@ -244,3 +247,5 @@ These are **not task skills** (ADR-0010). They are opt-in hook bundles under `pr
 9. **Shared UI is its own package.** The package name is per-repo; screens import primitives from it (ADR-0013).
 10. **One service hostname.** Service Workers attach to `api.dm.sh` by plural path prefix; no new hostname per Worker (ADR-0015).
 11. **Assigned tasks carry Gherkin acceptance scenarios** before implementation begins (ADR-0016).
+12. **One owner per policy domain.** Reference the owning skill or instruction section by name; never restate or fork a policy (ADR-0017).
+13. **No secondary skill catalog.** `skills/` at the root of darkmatter/skills is the only source; no sandbox manifests or generated subtrees (ADR-0018).

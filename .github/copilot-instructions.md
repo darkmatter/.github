@@ -24,27 +24,27 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 | ADR-0012 | Ops scripts in TypeScript-only repos are TypeScript, run with Bun. No new `.sh` beyond a runtime trampoline. |
 | ADR-0013 | Shared UI is its own package; the package name is per-repo. Screens import primitives from it. |
 | ADR-0014 | Configuration comes from named config files picked from a list; flags and env vars only override individual keys, read through `effect/Config`. |
-| ADR-0015 | Cohesive modules: keep each capability together; split only when it improves understanding. Canonical rules live in the `codebase-design` skill. |
+| ADR-0015 | Cohesive modules: keep each capability together; split only when it improves understanding. Canonical module rules live in the **Readability and module design** section of `docs/agents/60-readability.md`. |
 | ADR-0015 | Hostnames by audience, Workers by path: `api.dm.sh` is the single service hostname; Workers attach plural path prefixes via zone routes. *(Two accepted ADRs share 0015 — cite by title.)* |
 | ADR-0016 | Gherkin acceptance: assigned Linear tasks and GitHub issues carry at least one Given/When/Then scenario before implementation; trivial mechanical tasks may note an exception. |
-| OTel *(org convention, not a skills ADR)* | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
+| ADR-0017 | Skill and instruction ownership: each policy domain has exactly one owner; other artifacts reference the owner by name. Do not recreate a deleted skill to hold a rule. Partially supersedes 0015's ownership/pointer decision only. |
+| ADR-0018 | Centaur consumes the root skills catalog: `skills/` at the repo root is the only source; no sandbox manifest, generated subtree, or sync script. |
 
 ## Always apply
 
-- `diagnose` — before proposing fixes
 - `definition-of-done` — any complex multi-step task
 - `when-to-write-tests` — before writing or requesting tests; default is no new test, test observable public behavior
 
 ## Key skills by category
 
-**Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-repo-setup`, `darkmatter-gitops-conventions`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `domain-organization`, `codebase-design`, `choose-dev-entrypoints`, `rust-best-practices`
+**Architecture:** `effect-typescript`, `alchemy`, `darkmatter-ts-toolchain`, `darkmatter-repo-setup`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `choose-dev-entrypoints`
 
-**Code quality:** `codebase-cleanup`, `keep-codebase-maintainable`, `test-driven-development` (opt-in, when the user asks for TDD)
+**Code quality:** `codebase-cleanup` (scoped cleanup and the optional eight-pass audit), `advisor` (advisor-facing review guidance)
 
-**Workflow:** `flue`, `find-skills`, `record-rule` (manual invocation: interview, reconcile a rule note, land on `main`, activate, verify in every configured agent), `advisor` (installed per ADR-0010; not yet listed in the catalog)
+**Workflow:** `record-rule` (manual invocation: interview, reconcile a rule note, land on `main`, activate, verify in every configured agent)
 
-**UI/Frontend:** `darkmatter-design-system`, `ui-ux-pro-max`, `shadcn-registry-first`, `ui-component-architecture`, `vercel-react-best-practices`, `run-ui-registry-variations`
+**UI/Frontend:** `darkmatter-design-system`, `shadcn-registry-first`, `ui-component-architecture`, `run-ui-registry-variations` (manual invocation only)
 
-**Browser automation:** `agent-browser` (CDP, Node/Rust)
+**Externally installed** (declared in root `package.json` `skills`; upstream-maintained, not vendored): `agent-browser` (`vercel-labs/agent-browser`), `find-skills` (`vercel-labs/skills`), `rust-best-practices` (`apollographql/skills`), `test-driven-development` (`obra/superpowers`, opt-in when the user asks for TDD), `ui-ux-pro-max` (`nextlevelbuilder/ui-ux-pro-max-skill`), `vercel-react-best-practices` (`vercel-labs/agent-skills`)
 
-**Client runtimes (opt-in, not task skills — ADR-0010):** `presets/claude/runtime/session-context-pipeline` (Claude hook bundle: session summarizer, doc injection, end-of-turn checklist), `presets/opencode/runtime/continuous-learning` (stop hook), `presets/opencode/runtime/strategic-compact.md` (auto-compaction contract), `runtime/end-of-turn-review` (client-agnostic review utility)
+**Client runtimes (opt-in, not task skills — ADR-0010):** `presets/claude/runtime/session-context-pipeline` (Claude hook bundle: session summarizer, doc injection, end-of-turn checklist), `presets/opencode/runtime/continuous-learning` (stop hook), `presets/opencode/runtime/strategic-compact.md` (auto-compaction contract)
