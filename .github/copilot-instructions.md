@@ -41,8 +41,6 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 
 **Code quality:** `codebase-cleanup` (scoped cleanup and the optional eight-pass audit), `advisor` (advisor-facing review guidance)
 
-**Workflow:** `record-rule` (manual invocation: interview, reconcile a rule note, land on `main`, activate, verify in every configured agent)
-
 **UI/Frontend:** `darkmatter-design-system`, `shadcn-registry-first`, `ui-component-architecture`, `run-ui-registry-variations` (manual invocation only)
 
 **Externally installed** (declared in root `package.json` `skills`; upstream-maintained, not vendored): `agent-browser` (`vercel-labs/agent-browser`), `find-skills` (`vercel-labs/skills`), `rust-best-practices` (`apollographql/skills`), `test-driven-development` (`obra/superpowers`, opt-in when the user asks for TDD), `ui-ux-pro-max` (`nextlevelbuilder/ui-ux-pro-max-skill`), `vercel-react-best-practices` (`vercel-labs/agent-skills`)

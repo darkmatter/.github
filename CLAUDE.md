@@ -198,7 +198,6 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 |-------|--------|
 | `advisor` | Acting as an advisor to another agent: prevent reinvention, log observed agent events |
 | `codebase-cleanup` | Scoped cleanup and the optional eight-pass quality audit; feature work and bug fixes stay out |
-| `record-rule` | Manually invoked: interview for intent and applicability, reconcile a rule note with org-wide/project-local policies, land on `main`, activate, verify in every configured agent |
 
 ### Externally installed skills
 
