@@ -107,6 +107,24 @@ export class Settings extends Effect.Service<Settings>()("Settings", {
 
 Secret values MUST be typed as redacted wrappers (`Config.redacted`, Pydantic `SecretStr`, Rust `secrecy::Secret<T>`). Plain string typing for a secret is a defect.
 
+### ADR-0006: README minimum standard
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md)
+
+Every non-trivial project README MUST follow [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) and include these sections in order:
+
+1. **Title + short description** — one line, matches repo/package name
+2. **Long description / Background** — what it is, who uses it, scope boundaries
+3. **Table of contents** — required for READMEs over 100 lines
+4. **Install** — copy/paste-able command block for host tools and prerequisites
+5. **Usage** — copy/paste-able quickstart from fresh clone to a useful result
+6. **Development command surface** — aligned with ADR-0002 (`install`, `setup`, `server/run`, `test`, `build`, `ci`, `console`)
+7. **Configuration and secrets** — where env vars, local config, and secrets come from (no secret values)
+8. **Testing / verification** — the command a contributor runs to confirm the checkout works
+9. **Contributing** — where questions go, PR policy, contribution requirements
+10. **License** — last section, states license or `UNLICENSED`
+
+All commands must run as written from the repo root. Documentation-only repos may omit runnable sections if they say so explicitly.
+
 ### OTel-only observability
 **Status:** Accepted
 
@@ -168,6 +186,8 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `vercel-react-best-practices` | React/Next.js performance |
 | `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
 | `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
+| `shadcn-registry-first` | Install from shadcn registry before hand-rolling; build 3+ variations for comparison |
+| `ui-component-architecture` | Keep screens thin; reuse `@repo/ui` primitives, graduate reusables to shared package |
 
 ### Browser automation
 
@@ -214,3 +234,4 @@ These are **not task skills** — they are consumed by the agent runtime to conf
 5. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
 6. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
 7. **One settings module per binary.** No scattered `process.env` reads (ADR-0005).
+8. **Every project README follows Standard Readme.** Title, install, usage/quickstart, command surface, config, test command, contributing, license — all copy/paste-able (ADR-0006).
