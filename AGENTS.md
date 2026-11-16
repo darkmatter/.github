@@ -17,31 +17,35 @@ Full details: [darkmatter/skills](https://github.com/darkmatter/skills)
 | [0003](https://github.com/darkmatter/skills/blob/main/docs/adr/0003-protobuf-as-service-source-of-truth.md) | Cross-language types use **Protobuf + `buf`**. Default transport: **ConnectRPC**. Generated code is committed. `buf lint` + `buf breaking` in CI. |
 | [0004](https://github.com/darkmatter/skills/blob/main/docs/adr/0004-no-reinvention.md) | **No reinvention.** Check for existing libraries before implementing. A dependency beats a private reimplementation. |
 | [0005](https://github.com/darkmatter/skills/blob/main/docs/adr/0005-typed-settings-module-decoupled-from-provider.md) | **One typed `src/settings.<ext>`** per binary. Only place that reads raw env. Validates at startup. Decoupled from provider. Secret values must use redacted wrappers (`Config.redacted`, `SecretStr`, `secrecy::Secret<T>`). |
-| OTel | App code imports only **OpenTelemetry SDKs**. Provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
+| [0006](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md) | READMEs follow **Standard Readme**: title, background if needed, TOC over 100 lines, copy-pasteable install + usage, documented command surface (ADR-0002), config/secrets docs, a verification command, contributing, license last. |
+| [0007](https://github.com/darkmatter/skills/blob/main/docs/adr/0007-type-checked-sql-in-typescript.md) | TypeScript MUST NOT embed SQL as inline strings/template literals (including `sql<Row>` tags). Use a **type-checked query builder**, preference order **Kysely > Drizzle > other builders with comparable compile-time checking**. |
+| [0008](https://github.com/darkmatter/skills/blob/main/docs/adr/0008-decouple-telemetry-concerns.md) | App code imports only **OpenTelemetry SDKs**. Provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ---
 
 ## Skills to apply proactively
 
-**Always-on:** `coding-standards`, `brainstorming`, `test-driven-development`, `systematic-debugging`, `verification-before-completion`, `definition-of-done`
+The following are confirmed present as `skills/<name>/` directories in darkmatter/skills. If you're tempted to invoke `coding-standards`, `systematic-debugging`, `verification-before-completion`, `writing-plans`, `executing-plans`, `subagent-driven-development`, `dispatching-parallel-agents`, `frontend-design`, `browser-use`, `caveman`, `caveman-review`, `compress`, `neon-postgres`, or `hl-funding-analysis` — none of these exist as a skill; see "Known gaps" in [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
 
-**Task management:** `beads-setup` (when `.beads/` missing), `beads-linear-sync`, `writing-plans`, `executing-plans`
+**Always-on:** `brainstorming`, `test-driven-development` (or its overlapping twin `tdd`), `definition-of-done`
 
-**Agent orchestration:** `subagent-driven-development`, `dispatching-parallel-agents`
+**Task management:** `beads-setup` (when `.beads/` missing), `beads-linear-sync`, `finishing-a-development-branch`, `handoff`
 
-**Code quality:** `requesting-code-review`, `receiving-code-review`, `codebase-cleanup`, `repository-organization`, `end-of-turn-review`, `writing-skills`
+**Debugging & code quality:** `diagnose`, `requesting-code-review`, `receiving-code-review`, `codebase-cleanup`, `repository-organization`, `end-of-turn-review`, `writing-skills`, `improve-codebase-architecture`
 
-**Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`
+**Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`, `choose-dev-entrypoints`
 
-**Workflow:** `finishing-a-development-branch`, `dm-skill-creator`, `find-skills`, `run-meeting-summary`
+**Workflow:** `dm-skill-creator`, `find-skills`, `grill-me`, `grill-with-docs`, `triage`, `zoom-out`, `prototype`
 
-**UI:** `frontend-design`, `ui-ux-pro-max`, `vercel-react-best-practices`, `kickoff-dm-design`
+**UI:** `ui-ux-pro-max`, `vercel-react-best-practices`, `ui-component-architecture`, `shadcn-registry-first`, `kickoff-dm-design` (manual), `run-ui-registry-variations` (manual)
 
-**Platform:** `nextjs-to-rwsdk-migration`, `openchronicle-setup`, `neon-postgres`
+**Platform:** `nextjs-to-rwsdk-migration`, `openchronicle-setup`, `rust-best-practices`
 
-**Browser:** `browser-use` (Python/persistent), `agent-browser` (CDP/Node/Rust)
+**Browser:** `agent-browser` (CDP/Node/Rust)
 
-**Communication:** `caveman`, `caveman-commit`, `caveman-review`, `compress`
+**Communication:** `caveman-commit`
+
+**Manual-invocation only:** `run-meeting-summary`, `kickoff-dm-design`, `run-ui-registry-variations`
 
 **Runtime policies (auto):** `using-superpowers` (session start), `continuous-learning` (session end), `strategic-compact` (long autonomous sessions)
 

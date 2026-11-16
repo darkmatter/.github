@@ -107,10 +107,20 @@ export class Settings extends Effect.Service<Settings>()("Settings", {
 
 Secret values MUST be typed as redacted wrappers (`Config.redacted`, Pydantic `SecretStr`, Rust `secrecy::Secret<T>`). Plain string typing for a secret is a defect.
 
-### OTel-only observability
-**Status:** Accepted
+### ADR-0006: README minimum standard
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md)
 
-App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentry/*`, PostHog, Datadog) never appear in `apps/*`. Provider wiring is isolated in shared packages.
+Project READMEs MUST follow [Standard Readme](https://github.com/RichardLitt/standard-readme) as the default structure. At minimum: title + one-line description, background when needed, a table of contents for READMEs over 100 lines, a copy-pasteable Install block, a copy-pasteable Usage/quickstart block, the standard development command surface (ADR-0002), configuration/secrets documentation (without exposing values), a verification/testing command, contributing guidance, and license last. Documentation-only repos may omit install/usage if they say so explicitly.
+
+### ADR-0007: Type-checked SQL in TypeScript
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0007-type-checked-sql-in-typescript.md)
+
+TypeScript application code MUST NOT embed SQL as inline strings or template literals — including tagged-template helpers like `` sql<Row>`...` `` — since the compiler cannot check table/column names, joins, or nullability through them. Use a type-checked query builder or ORM instead. Preference order: **Kysely > Drizzle > other builders with comparable compile-time checking**. Narrower carve-outs exist for plain `.sql` files consumed by external DB tooling and for TypeScript migration files.
+
+### ADR-0008: Decouple telemetry concerns
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0008-decouple-telemetry-concerns.md)
+
+App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentry/*`, PostHog, Datadog) never appear in `apps/*`. Provider wiring is isolated in shared packages, exposed to apps only as OTel exporters/instrumentation plugins — swapping a provider should be a config change, not a refactor.
 
 ---
 
@@ -118,16 +128,27 @@ App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentr
 
 Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager. Full catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
 
+> **Note:** this section lists skills confirmed present as `skills/<name>/` directories in darkmatter/skills. Earlier versions of this file also listed `coding-standards`, `systematic-debugging`, `verification-before-completion`, `writing-plans`, `executing-plans`, `subagent-driven-development`, `dispatching-parallel-agents`, `frontend-design`, `browser-use`, `caveman`, `caveman-review`, `compress`, `neon-postgres`, and `hl-funding-analysis` — none of these have a matching skill directory (some were deliberately removed upstream, most were never built). They're tracked as "Known gaps" in [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md); don't invoke them by name until they exist.
+
 ### Apply on every task
 
 | Skill | When |
 |-------|------|
-| `coding-standards` | Any TypeScript/JS/React/Node code authoring or review |
 | `brainstorming` | Before any non-trivial implementation |
-| `test-driven-development` | Before writing implementation code |
-| `systematic-debugging` | Before proposing fixes for bugs or failures |
-| `verification-before-completion` | Before claiming work is done |
+| `test-driven-development` | Before writing implementation code (`tdd` is an overlapping, equally valid entry point) |
 | `definition-of-done` | Complex, multi-step tasks |
+
+### Debugging & code quality
+
+| Skill | Use for |
+|-------|--------|
+| `diagnose` | Full reproduce → minimise → hypothesise → instrument → fix loop for hard bugs and perf regressions |
+| `requesting-code-review` | Dispatch code-reviewer subagent before merge |
+| `receiving-code-review` | Evaluate review feedback rigorously before implementing |
+| `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
+| `improve-codebase-architecture` | Surface "deepening" refactor opportunities (shallow → deep modules) |
+| `end-of-turn-review` | GPT second-opinion pass over diffs or plans at end of turn |
+| `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
 
 ### Architecture & infrastructure
 
@@ -137,7 +158,8 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `alchemy` | Alchemy v2 infrastructure (Cloudflare/AWS providers) |
 | `nix-flake-organization` | Thin `flake/` public layer + `src/` implementation |
 | `sops-secret-access` | SOPS-encrypted config, private registries |
-| `repository-organization` | Repo layout, Standard README, ADR placement, agent context |
+| `repository-organization` | Repo layout, Standard README (ADR-0006), ADR placement, agent context |
+| `choose-dev-entrypoints` | Assign dev-env responsibilities across Nix/Just/Bun/Turborepo/scripts |
 
 ### Task and workflow
 
@@ -145,53 +167,47 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 |-------|--------|
 | `beads-setup` | Onboard a repo onto `bd` (run when `.beads/` is missing) |
 | `beads-linear-sync` | Configure Beads ↔ Linear sync |
-| `writing-plans` | Plan before implementation |
-| `executing-plans` | Execute a written implementation plan with review checkpoints |
-| `subagent-driven-development` | Execute plans via dispatched subagents |
-| `dispatching-parallel-agents` | Delegate 2+ independent tasks to isolated subagents in parallel |
 | `finishing-a-development-branch` | Merge, PR, or cleanup after implementation |
 | `dm-skill-creator` | Create a new team-wide skill |
-| `requesting-code-review` | Dispatch code-reviewer subagent before merge |
-| `receiving-code-review` | Evaluate review feedback rigorously before implementing |
-| `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
-| `end-of-turn-review` | GPT second-opinion pass over diffs or plans at end of turn |
-| `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
 | `find-skills` | Discover and install agent skills from the open ecosystem |
-| `run-meeting-summary` | Resolve meeting artifacts and draft approved Obsidian summaries |
+| `handoff` | Compact the current conversation into a handoff doc for a fresh agent |
+| `grill-me` | Interview the user relentlessly to stress-test a plan or design |
+| `grill-with-docs` | Same, but also updates CONTEXT.md/ADRs inline as decisions crystallize |
+| `triage` | State-machine issue triage (bug/enhancement × needs-triage/ready-for-agent/etc.) |
+| `zoom-out` | Map relevant modules/callers at a higher abstraction level before diving in |
+| `prototype` | Build a throwaway prototype to answer a design question before committing |
 
 ### UI/Frontend
 
 | Skill | Use for |
 |-------|--------|
-| `frontend-design` | Distinctive, production-grade UI |
 | `ui-ux-pro-max` | Design system intelligence (styles, palettes, fonts, UX guidelines) |
 | `vercel-react-best-practices` | React/Next.js performance |
 | `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
-| `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
+| `ui-component-architecture` | Keep React screens thin; graduate reusable units into `@repo/ui` |
+| `shadcn-registry-first` | Install existing shadcn/shadcnblocks components before hand-rolling UI |
+| `kickoff-dm-design` | **Manual.** Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
+| `run-ui-registry-variations` | **Manual.** Build exactly 3 UI variations from shadcn registries |
 
 ### Browser automation
 
 | Skill | Use for |
 |-------|--------|
-| `browser-use` | Browser automation via `browser-use` CLI with persistent sessions (Python) |
-| `agent-browser` | Chrome/Chromium via CDP — prefer for Node.js/Rust workflows |
+| `agent-browser` | Browser automation via Chrome/Chromium CDP — Node.js/Rust workflows |
 
-### Communication & compression
+### Communication
 
 | Skill | Use for |
 |-------|--------|
-| `caveman` | Ultra-compressed communication (~75% token savings) |
 | `caveman-commit` | Ultra-compressed conventional commit messages (subject ≤50 chars) |
-| `caveman-review` | Ultra-compressed code review comments (one line per finding) |
-| `compress` | Compress natural-language memory files into caveman format |
 
 ### Domain-specific
 
 | Skill | Use for |
 |-------|--------|
-| `neon-postgres` | Neon Serverless Postgres |
 | `openchronicle-setup` | Local-first agent memory (macOS) |
-| `hl-funding-analysis` | Hyperliquid perp funding rate analysis |
+| `rust-best-practices` | Idiomatic Rust (borrowing, error handling, clippy, perf, type-state) |
+| `run-meeting-summary` | **Manual.** Resolve meeting artifacts and draft approved Obsidian summaries |
 
 ### Runtime policies (auto-applied by agent client)
 
