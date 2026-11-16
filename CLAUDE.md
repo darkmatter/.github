@@ -107,6 +107,16 @@ export class Settings extends Effect.Service<Settings>()("Settings", {
 
 Secret values MUST be typed as redacted wrappers (`Config.redacted`, Pydantic `SecretStr`, Rust `secrecy::Secret<T>`). Plain string typing for a secret is a defect.
 
+### ADR-0006: README minimum standard
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md)
+
+Every non-trivial project README MUST follow [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) as the default structure and include at minimum: title + short description, install (copy/paste-able), usage with a quickstart path, the ADR-0002 command surface, configuration and secrets documentation, a verification/test command, contributing guidance, and license last. Commands must run as written from the repo root — no unexplained placeholders.
+
+### ADR-0007: Type-checked SQL in TypeScript
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0007-type-checked-sql-in-typescript.md)
+
+TypeScript code MUST NOT embed SQL as inline strings or tagged templates (including `sql<Row>\`...\``). Use a type-checked query builder: **Kysely** is preferred for query-heavy code; Drizzle is allowed when already present. If a query cannot be expressed through the typed surface, improve the abstraction — never fall back to inline SQL.
+
 ### OTel-only observability
 **Status:** Accepted
 
@@ -126,6 +136,7 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `brainstorming` | Before any non-trivial implementation |
 | `test-driven-development` | Before writing implementation code |
 | `systematic-debugging` | Before proposing fixes for bugs or failures |
+| `diagnose` | Hard bugs and performance regressions — reproduce → minimise → hypothesise → instrument → fix |
 | `verification-before-completion` | Before claiming work is done |
 | `definition-of-done` | Complex, multi-step tasks |
 
@@ -138,6 +149,7 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `nix-flake-organization` | Thin `flake/` public layer + `src/` implementation |
 | `sops-secret-access` | SOPS-encrypted config, private registries |
 | `repository-organization` | Repo layout, Standard README, ADR placement, agent context |
+| `rust-best-practices` | Idiomatic Rust — borrowing, error handling, linting, performance, testing |
 
 ### Task and workflow
 
@@ -154,10 +166,17 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `requesting-code-review` | Dispatch code-reviewer subagent before merge |
 | `receiving-code-review` | Evaluate review feedback rigorously before implementing |
 | `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
+| `improve-codebase-architecture` | Surface architectural friction; find deepening opportunities for testability and AI-navigability |
 | `end-of-turn-review` | GPT second-opinion pass over diffs or plans at end of turn |
 | `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
 | `find-skills` | Discover and install agent skills from the open ecosystem |
 | `run-meeting-summary` | Resolve meeting artifacts and draft approved Obsidian summaries |
+| `grill-me` | Stress-test a plan or design — relentless Q&A through the decision tree, one question at a time |
+| `grill-with-docs` | Grill on a plan against the domain model; update CONTEXT.md and ADRs inline as decisions crystallize |
+| `triage` | Issue triage state machine — classify bugs/enhancements, write agent briefs, manage wontfix |
+| `handoff` | Compact the current session into a handoff document for a fresh agent |
+| `zoom-out` | Map modules and callers when unfamiliar with an area of code; get broader context |
+| `prototype` | Build a throwaway prototype (terminal logic app or UI variations) to validate a design question |
 
 ### UI/Frontend
 
@@ -168,6 +187,9 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `vercel-react-best-practices` | React/Next.js performance |
 | `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
 | `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
+| `shadcn-registry-first` | Install from shadcn/shadcnblocks registries before hand-rolling; always build 3+ variations |
+| `ui-component-architecture` | Keep screens thin; graduate reusable units into `@repo/ui`; avoid div-soup |
+| `run-ui-registry-variations` | Build exactly three UI variations from shadcnblocks, Aceternity, or the DM registry |
 
 ### Browser automation
 
@@ -214,3 +236,5 @@ These are **not task skills** — they are consumed by the agent runtime to conf
 5. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
 6. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
 7. **One settings module per binary.** No scattered `process.env` reads (ADR-0005).
+8. **READMEs follow Standard Readme.** Copy/paste-able commands, all mandatory sections (ADR-0006).
+9. **No inline SQL in TypeScript.** Use Kysely (preferred) or Drizzle; never `sql<Row>\`...\`` (ADR-0007).
