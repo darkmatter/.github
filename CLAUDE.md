@@ -16,22 +16,7 @@ Darkmatter is a small, polyglot engineering team shipping developer tools, crypt
 
 These decisions apply to **every** darkmatter project repo unless the project explicitly documents an exception. Full ADR text lives in [darkmatter/skills/docs/adr](https://github.com/darkmatter/skills/tree/main/docs/adr).
 
-### ADR-0001: Beads is the standard task tracker and agent memory store
-**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0001-beads-as-task-tracker-and-agent-memory.md)
-
-Use `bd` (beads) for all task tracking and persistent agent memory. **Do not** use `TodoWrite`, `TaskCreate`, `MEMORY.md`, `TODO.md`, or `NOTES.md` for state that must survive a session.
-
-| Command | Purpose |
-|---------|--------|
-| `bd prime` | Load task + memory context at session start |
-| `bd create "task"` | Create a task |
-| `bd ready` | List tasks with all blockers closed |
-| `bd remember "insight"` | Store a memory |
-| `bd memories <keyword>` | Query stored memories |
-| `bd close <id>` | Close a task |
-| `bd linear sync` | Sync bidirectionally with Linear |
-
-When a repo lacks `.beads/`, apply the `beads-setup` skill before creating tasks.
+> **ADR-0001 removed.** The prior "Beads is the standard task tracker" decision was retracted upstream (`darkmatter/skills` commit `f5f5227`, 2026-07-09) — the `beads-setup`/`beads-linear-sync` skills, `.beads/` state, and the ADR itself were all deleted. There is currently **no org-standard task tracker ADR**. Don't tell agents to use `bd`/beads; use the harness's native task tracking (e.g. `TodoWrite`/`TaskCreate`) or a project's own documented tracker instead.
 
 ### ADR-0002: Standard command surface
 **Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0002-standard-project-command-surface.md)
@@ -107,6 +92,21 @@ export class Settings extends Effect.Service<Settings>()("Settings", {
 
 Secret values MUST be typed as redacted wrappers (`Config.redacted`, Pydantic `SecretStr`, Rust `secrecy::Secret<T>`). Plain string typing for a secret is a defect.
 
+### ADR-0006: README minimum standard
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0006-readme-minimum-standard.md)
+
+Project READMEs MUST follow [Standard Readme](https://github.com/RichardLitt/standard-readme/blob/main/spec.md) as the default structure. At minimum: title + one-line description, a table of contents for READMEs over 100 lines, copy/paste-able **install** and **usage** blocks, the development command surface (ADR-0002), configuration/secrets notes, a verification command, contributing guidance, and license last. Documentation-only repos may skip install/usage only if they say so explicitly.
+
+### ADR-0007: Type-checked SQL in TypeScript
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0007-type-checked-sql-in-typescript.md)
+
+TypeScript MUST NOT embed SQL as inline strings or tagged templates (including `sql<Row>\`...\``) for application queries — a `Row` generic is a type assertion, not query checking. Use a type-checked query builder/ORM that derives types from the schema. **Kysely** is preferred for query-heavy code; **Drizzle** is allowed but not preferred for complex joins. Plain `.sql` files for external migration/schema tooling (not embedded in TypeScript) are outside scope.
+
+### ADR-0008: Per-language reference codebases
+**Status:** Accepted | [Full ADR](https://github.com/darkmatter/skills/blob/main/docs/adr/0008-per-language-reference-codebases.md)
+
+[`darkmatter/skills/references/`](https://github.com/darkmatter/skills/tree/main/references) holds one directory per language (`rust/`, `go/`, `typescript/` today) with exemplar code showing preferred conventions — layout, error handling, testing, tooling, preferred libraries. Skills carry prose guidance; `references/` carries the code that shows it. Precedence when conventions conflict: project `.agent/` rules → `references/` exemplars → general language idiom. Not distributed via Home Manager (skills are); needs a repo checkout.
+
 ### OTel-only observability
 **Status:** Accepted
 
@@ -116,18 +116,27 @@ App code depends only on OpenTelemetry SDKs. Provider-specific packages (`@sentr
 
 ## Skills catalog
 
-Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager. Full catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md).
+Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatter/skills) via Nix Home Manager. Full catalog: [`docs/catalog.md`](https://github.com/darkmatter/skills/blob/main/docs/catalog.md). This section lists only skills currently shipped from `skills/` (not `inactive/` or the archived `docs/00-inbox/skills/`) as of 2026-07-27.
 
-### Apply on every task
+### Task and workflow
 
-| Skill | When |
-|-------|------|
-| `coding-standards` | Any TypeScript/JS/React/Node code authoring or review |
-| `brainstorming` | Before any non-trivial implementation |
-| `test-driven-development` | Before writing implementation code |
-| `systematic-debugging` | Before proposing fixes for bugs or failures |
-| `verification-before-completion` | Before claiming work is done |
-| `definition-of-done` | Complex, multi-step tasks |
+| Skill | Use for |
+|-------|--------|
+| `choose-dev-entrypoints` | Deciding where dev/codegen/install commands belong (Nix vs Just vs Bun vs scripts) |
+| `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
+| `definition-of-done` | Any complex, multi-step task that may invite shortcuts |
+| `diagnose` | Disciplined bug/perf-regression diagnosis loop (reproduce → minimise → hypothesise → instrument → fix → regression-test) |
+| `find-skills` | Discover and install agent skills from the open ecosystem |
+| `finishing-a-development-branch` | Merge, PR, or cleanup once implementation is complete |
+| `grill-me` | Interview the user relentlessly on a plan/design until shared understanding is reached |
+| `grill-with-docs` | `grill-me`, but updates CONTEXT.md/ADRs inline as decisions crystallize |
+| `handoff` | Compact the current conversation into a handoff doc for a fresh agent |
+| `improve-codebase-architecture` | Surface architectural friction and deepening opportunities |
+| `prototype` | Throwaway prototype (terminal app or radically different UI variations) to answer a design question |
+| `repository-organization` | Repo layout, Standard README, agent context, ADR placement |
+| `tdd` | User-requested TDD workflow with interface planning and vertical red-green slices |
+| `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
+| `zoom-out` | Map relevant modules/callers using domain vocabulary before diving into unfamiliar code |
 
 ### Architecture & infrastructure
 
@@ -137,61 +146,32 @@ Team-wide skills distribute from [darkmatter/skills](https://github.com/darkmatt
 | `alchemy` | Alchemy v2 infrastructure (Cloudflare/AWS providers) |
 | `nix-flake-organization` | Thin `flake/` public layer + `src/` implementation |
 | `sops-secret-access` | SOPS-encrypted config, private registries |
-| `repository-organization` | Repo layout, Standard README, ADR placement, agent context |
-
-### Task and workflow
-
-| Skill | Use for |
-|-------|--------|
-| `beads-setup` | Onboard a repo onto `bd` (run when `.beads/` is missing) |
-| `beads-linear-sync` | Configure Beads ↔ Linear sync |
-| `writing-plans` | Plan before implementation |
-| `executing-plans` | Execute a written implementation plan with review checkpoints |
-| `subagent-driven-development` | Execute plans via dispatched subagents |
-| `dispatching-parallel-agents` | Delegate 2+ independent tasks to isolated subagents in parallel |
-| `finishing-a-development-branch` | Merge, PR, or cleanup after implementation |
-| `dm-skill-creator` | Create a new team-wide skill |
-| `requesting-code-review` | Dispatch code-reviewer subagent before merge |
-| `receiving-code-review` | Evaluate review feedback rigorously before implementing |
-| `codebase-cleanup` | Multi-pass refactor sweep (8 specialist subagents) |
-| `end-of-turn-review` | GPT second-opinion pass over diffs or plans at end of turn |
-| `writing-skills` | TDD applied to process documentation — create, edit, verify skills |
-| `find-skills` | Discover and install agent skills from the open ecosystem |
-| `run-meeting-summary` | Resolve meeting artifacts and draft approved Obsidian summaries |
+| `darkmatter-gitops-conventions` | Safe changes to `darkmatter/gitops`: validation trio, sha-pinned images, SOPS rules, rollback via revert |
+| `darkmatter-ts-toolchain` | Org TS toolchain contract: Bun-only, tsgo/vitest/oxlint, Effect for I/O, Alchemy deploys, changesets |
 
 ### UI/Frontend
 
 | Skill | Use for |
 |-------|--------|
-| `frontend-design` | Distinctive, production-grade UI |
-| `ui-ux-pro-max` | Design system intelligence (styles, palettes, fonts, UX guidelines) |
+| `ui-ux-pro-max` | Design system intelligence (50+ styles, palettes, fonts, UX guidelines) |
 | `vercel-react-best-practices` | React/Next.js performance |
+| `ui-component-architecture` | Keep screens thin; graduate reusable units into `packages/ui` |
+| `shadcn-registry-first` | Install from configured shadcn registries before hand-rolling UI |
+| `run-ui-registry-variations` | Manual: build 3 UI variations from shadcnblocks/Aceternity/Darkmatter registries |
 | `nextjs-to-rwsdk-migration` | Port Next.js App Router to RedwoodSDK on Cloudflare Workers |
-| `kickoff-dm-design` | Design-room kickoff: Linear ticket + Slack post from a Claude Design URL |
 
 ### Browser automation
 
 | Skill | Use for |
 |-------|--------|
-| `browser-use` | Browser automation via `browser-use` CLI with persistent sessions (Python) |
-| `agent-browser` | Chrome/Chromium via CDP — prefer for Node.js/Rust workflows |
+| `agent-browser` | Chrome/Chromium via CDP — Node.js/Rust workflows |
 
-### Communication & compression
-
-| Skill | Use for |
-|-------|--------|
-| `caveman` | Ultra-compressed communication (~75% token savings) |
-| `caveman-commit` | Ultra-compressed conventional commit messages (subject ≤50 chars) |
-| `caveman-review` | Ultra-compressed code review comments (one line per finding) |
-| `compress` | Compress natural-language memory files into caveman format |
-
-### Domain-specific
+### Other
 
 | Skill | Use for |
 |-------|--------|
-| `neon-postgres` | Neon Serverless Postgres |
-| `openchronicle-setup` | Local-first agent memory (macOS) |
-| `hl-funding-analysis` | Hyperliquid perp funding rate analysis |
+| `rust-best-practices` | Idiomatic Rust (Apollo GraphQL handbook): borrowing/cloning, error handling, testing, generics |
+| `session-context-pipeline` | Hook-driven background pipeline: session summarizer, doc-brief injector, end-of-turn checklist reviewer |
 
 ### Runtime policies (auto-applied by agent client)
 
@@ -200,17 +180,20 @@ These are **not task skills** — they are consumed by the agent runtime to conf
 | Skill | When |
 |-------|------|
 | `using-superpowers` | Session start — establishes skill discovery and invocation protocol |
-| `continuous-learning` | Session end (Stop hook) — extracts reusable patterns into new skills |
 | `strategic-compact` | Long autonomous sessions with auto-compaction enabled |
+
+**Removed since the last import:** `beads-setup`, `beads-linear-sync`, `brainstorming`, `caveman-commit`, `continuous-learning`, `dm-skill-creator`, `end-of-turn-review`, `kickoff-dm-design`, `receiving-code-review`, `requesting-code-review`, `run-meeting-summary`, `test-driven-development`, `triage` (moved to `inactive/` upstream — not currently shipped). `coding-standards`, `frontend-design`, `browser-use`, `neon-postgres`, `openchronicle-setup`, `hl-funding-analysis`, `caveman`, `caveman-review`, `compress`, `systematic-debugging`, `verification-before-completion`, `writing-plans`, `executing-plans`, `subagent-driven-development`, `dispatching-parallel-agents` no longer exist in `darkmatter/skills` at all (some are archived, unshipped, under `docs/00-inbox/skills/`). Don't reference any of these as available skills until they reappear upstream.
 
 ---
 
 ## Working conventions
 
-1. **Check for Beads first.** No `.beads/`? Apply `beads-setup` before creating tasks.
-2. **Use the standard command surface.** `./scripts/setup` before working; `./scripts/ci` before PRs.
-3. **Reference ADRs when making architectural decisions.** Surface conflicts before proceeding.
-4. **Secrets use SOPS.** Apply `sops-secret-access` skill; never print decrypted contents.
-5. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
-6. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
-7. **One settings module per binary.** No scattered `process.env` reads (ADR-0005).
+1. **Use the standard command surface.** `./scripts/setup` before working; `./scripts/ci` before PRs.
+2. **Reference ADRs when making architectural decisions.** Surface conflicts before proceeding.
+3. **Secrets use SOPS.** Apply `sops-secret-access` skill; never print decrypted contents.
+4. **Effect is the default for TypeScript services.** See `effect-typescript` skill and ADR-0005.
+5. **Protobuf when crossing language boundaries.** Use `buf`, commit generated code (ADR-0003).
+6. **One settings module per binary.** No scattered `process.env` reads (ADR-0005).
+7. **Follow Standard Readme.** See ADR-0006 before writing or reviewing a README.
+8. **No inline SQL in TypeScript.** Use Kysely/Drizzle per ADR-0007.
+9. **No org-standard task tracker right now.** ADR-0001 (Beads) was retracted; use the harness's native tracking or the project's own documented tool.
