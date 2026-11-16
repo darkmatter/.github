@@ -16,6 +16,7 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 | ADR-0003 | Cross-language types use Protobuf + `buf`. Default transport: ConnectRPC. Commit generated code. `buf lint` + `buf breaking` in CI. |
 | ADR-0004 | No reinvention — check for existing libraries before implementing. A dependency beats private code. |
 | ADR-0005 | One typed `src/settings.<ext>` per binary. Only place that reads raw env vars. Validates at startup. Secret values use redacted wrappers — never plain strings. |
+| ADR-0006 | Every non-trivial README follows Standard Readme. Must include: title, install, usage/quickstart, command surface (ADR-0002), config/secrets, verify command, contributing, license. All commands copy/paste-able from repo root. |
 | OTel | App code imports only OTel SDKs; provider wiring (`@sentry/*`, PostHog, etc.) lives in shared packages only. |
 
 ## Always apply
@@ -23,19 +24,22 @@ Reusable agent skills and architecture decision records live in [darkmatter/skil
 - `coding-standards` — any TypeScript/JS/React/Node code task
 - `brainstorming` — before implementing anything non-trivial
 - `test-driven-development` — before writing implementation code
-- `systematic-debugging` — before proposing fixes
+- `diagnose` — before proposing fixes for hard bugs or performance regressions
+- `systematic-debugging` — structured approach to bugs and unexpected behavior
 - `verification-before-completion` — before claiming work is done
 - `definition-of-done` — any complex multi-step task
 
 ## Key skills by category
 
-**Task management:** `beads-setup` (no `.beads/`?), `writing-plans`, `executing-plans`, `subagent-driven-development`, `dispatching-parallel-agents`, `finishing-a-development-branch`
+**Task management:** `beads-setup` (no `.beads/`?), `writing-plans`, `executing-plans`, `subagent-driven-development`, `dispatching-parallel-agents`, `finishing-a-development-branch`, `triage` (issue workflow), `handoff` (session continuity)
 
 **Code quality:** `requesting-code-review`, `receiving-code-review`, `codebase-cleanup`, `end-of-turn-review`, `writing-skills`
 
-**Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`
+**Architecture:** `effect-typescript`, `alchemy`, `nix-flake-organization`, `sops-secret-access`, `repository-organization`, `improve-codebase-architecture`, `zoom-out`
 
-**UI/Frontend:** `frontend-design`, `ui-ux-pro-max`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `kickoff-dm-design`
+**Design & discovery:** `grill-me`, `grill-with-docs`, `prototype`
+
+**UI/Frontend:** `frontend-design`, `ui-ux-pro-max`, `vercel-react-best-practices`, `nextjs-to-rwsdk-migration`, `kickoff-dm-design`, `shadcn-registry-first`, `run-ui-registry-variations`, `ui-component-architecture`
 
 **Browser automation:** `browser-use` (Python, persistent sessions), `agent-browser` (CDP, Node/Rust)
 
